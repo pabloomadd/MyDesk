@@ -1,0 +1,98 @@
+<div class="container text-light text-center pt-5 pb-5">
+    <div class="row">
+
+        <div class="col-2">
+            <div>
+                <h4>Perfil</h4>
+                <div>
+                    <img src="/assets/perfil.png" alt="" width="150px" height="150px">
+                </div>
+            </div>
+
+            <div class="pt-4">
+                <p>
+                    Jacinto Jiménez
+                </p>
+                <p class="bg-info bg-opacity-50 border border-info rounded">Gerente de Medicina</p>
+
+            </div>
+
+            <div class="btn-group-vertical d-inline rounded" role="group">
+                <button type="button" class="btn prim-btn text-white">Mi Perfil</button>
+                <button type="button" class="btn prim-btn text-white">Ajustes</button>
+            </div>
+
+        </div>
+
+        <div class="container col-7">
+
+            <div class="card main-card">
+                <h4 class="text-white m-3">Escribir Nueva Nota</h4>
+                <div class="card m-3">
+                    <form id="task-form">
+
+                        <input type="text" id="taskTitle" class="form-control" placeholder="Titulo de la Nota">
+
+                        <textarea id="taskDescrip" rows="5" class="form-control"
+                            placeholder="Descripción de la Nota"></textarea>
+
+                        <button class="btn btn-success m-2" id="btnMainNota" onclick="nuevaNota()">Crear Nota</button>
+
+                    </form>
+
+                </div>
+                <hr>
+                <h3 class="text-white">Mis Notas</h3>
+                <div class="card m-3 p-3" id="vistaNotas">
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="container col-3">
+            <h4>Mis Widgets</h4>
+
+            <div class="card main-card m-3 pt-3 pb-1 align-items-center text-white">
+
+                <h5>Reloj</h5>
+                <div class="clock text-dark">
+                    <label style="--i:1"><span>1</span></label>
+                    <label style="--i:2"><span>2</span></label>
+                    <label style="--i:3"><span>3</span></label>
+                    <label style="--i:4"><span>4</span></label>
+                    <label style="--i:5"><span>5</span></label>
+                    <label style="--i:6"><span>6</span></label>
+                    <label style="--i:7"><span>7</span></label>
+                    <label style="--i:8"><span>8</span></label>
+                    <label style="--i:9"><span>9</span></label>
+                    <label style="--i:10"><span>10</span></label>
+                    <label style="--i:11"><span>11</span></label>
+                    <label style="--i:12"><span>12</span></label>
+
+                    <div class="indicator">
+                        <span class="hand hour"></span>
+                        <span class="hand minute"></span>
+                        <span class="hand second"></span>
+                    </div>
+
+                </div>
+                <div class="text-end m-2">
+
+                </div>
+
+            </div>
+
+            <div class="card main-card m-3 pt-3 pb-1 text-white text-center">
+                <h5>Clima</h5>
+                <div class="card rounded-2 m-3 weather-background text-white">
+                    <input class="m-3" type="text" id="ciudadEntrada" placeholder="Ingresa una Ciudad">
+                    <button id="botonBusqueda" class=" btn btn-warning mx-auto mb-3">Buscar</button>
+                    <div id="datosClima"></div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
