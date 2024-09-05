@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
@@ -9,6 +9,16 @@ import { RouterLink, RouterOutlet } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
-  title = 'MyDesk-Angular';
+export class AppComponent implements OnInit{
+  
+  fecha = new Date();
+  annio?: number;
+  
+  ngOnInit(): void {  
+    this.getCurrentYear();
+  }
+
+  getCurrentYear(){
+    this.annio = this.fecha.getFullYear()  
+  }
 }
