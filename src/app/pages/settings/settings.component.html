@@ -1,1 +1,75 @@
-<p>settings works!</p>
+<div class="text-center">
+
+    <h1 class="text-white pt-3 pb-3">Mis Ajustes</h1>
+    <div class="container pb-5">
+
+        <div class="card card-settings mx-auto align-items-center">
+            <div class="">
+                <h4 class="m-3 text-white">Personalización</h4>
+                <div class="form-floating m-4">
+                    <select class="form-select">
+                        <option value="dark">Oscuro</option>
+                        <option value="realDark">Real Dark</option>
+                        <option value="aqua">Aqua</option>
+                        <option value="amazona">Amazonas</option>
+                        <option value="coral">Coral</option>
+                    </select>
+                    <label for="floatingSelect">Elija un Tema</label>
+                </div>
+                <p class="text-white">*El tema cambia la Apariencia Completa del Sitio</p>
+            </div>
+            <br>
+            <div class="m-1">
+                <h4 class="text-white">Widgets</h4>
+                <div class="row">
+                    <form class="needs-validation m-2" novalidate>
+
+                        <div class="btn-group m-2">
+                            <div class="m-2">
+                                <input type="checkbox" class="btn-check" id="btncheck1">
+                                <label class="btn btn-outline-warning " for="btncheck1">
+                                    <span>Reloj</span>
+                                    <br>
+                                    <img src="assets/reloj.png" alt="">
+                                </label>
+                            </div>
+
+                            <div class="m-2">
+                                <input type="checkbox" class="btn-check" id="btncheck2">
+                                <label class="btn btn-outline-warning" for="btncheck2">
+                                    <span>Clima</span>
+                                    <br>
+                                    <img src="assets/clima.png" alt="">
+                                </label>
+                            </div>
+                        </div>
+                        <br><br>
+                        <h5 class="text-white">Ajustes de Zona</h5>
+
+                        <div class="m-4">
+                            <label class="form-label">Ciudad</label>
+                            <input type="text" class="form-control" placeholder="Ingrese una Ciudad">
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+
+                        <div class="m-4">
+                            <label class="form-label">País</label>
+                            <input type="text" class="form-control" placeholder="Ingrese un País">
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+
+                        <p class="text-white">*La ciudad y el país se tomarán en cuenta para el Reoj y el Clima</p>
+
+                        <button class="btn btn-primary m-2" type="submit">Guardar</button>
+                        <button class="btn btn-danger m-2" type="button" routerLink="/">Salir</button>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>

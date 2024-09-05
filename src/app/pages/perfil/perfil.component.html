@@ -1,1 +1,59 @@
-<h1>Mi Perfil</h1>
+<div class="text-center">
+
+    <h1 class="p-3 text-white">Mi Perfil</h1>
+    <div class="container p-5">
+
+        <div class="card card-settings mx-auto align-items-center">
+            <form class="needs-validation m-2" novalidate>
+                <div class="m-4">
+                    <img src="assets/perfil.png" alt="Foto Perfil">
+                    <br>
+                    <button class="btn btn-warning m-2">Cambiar Foto</button>
+                </div>
+                <div class="m-4">
+                    <label class="form-label">Nombre/s</label>
+                    <input type="text" class="form-control" value="John" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+                <div class="m-4">
+                    <label class="form-label">Apellido/s</label>
+                    <input type="text" class="form-control" value="Doe" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+                <div class="m-4">
+                    <label class="form-label">Nombre de Usuario</label>
+                    <div class="input-group has-validation">
+                        <span class="input-group-text">&#64;</span>
+                        <input type="text" class="form-control" value="JohnDoe256">
+                        <div class="invalid-feedback">
+                            Ingrese un Usuario.
+                        </div>
+                    </div>
+                </div>
+                <div class="m-4">
+                    <label for="validationCustom03" class="form-label">Correo</label>
+                    <input type="text" class="form-control" value="johndoe@mail.com">
+                    <div class="invalid-feedback">
+                        Ingrese un Correo Electrónico.
+                    </div>
+                </div>
+
+                <div class="m-4">
+                    <label for="validationCustom05" class="form-label">Contraseña</label>
+                    <input type="text" class="form-control">
+                    <div class="invalid-feedback">
+                        Ingrese una Contraseña
+                    </div>
+                </div>
+                <div>
+                    <button class="btn btn-primary m-2" type="submit">Guardar</button>
+                    <button class="btn btn-danger m-2" type="button" routerLink="/">Salir</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
