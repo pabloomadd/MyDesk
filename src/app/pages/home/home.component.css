@@ -97,19 +97,27 @@ body{
     width: 4px;
     bottom: 0;
     border-radius: 25px;
-    transform-origin: bottom;
+    transform-origin: 50% 100%;
     background: red;
 }
 
-.hand.minute {
+.indicator .hand.second {
+    height: 65px;
+    width: 4px;
+    transform-origin: 50% 95%;
+}
+
+.indicator .hand.minute {
     height: 58px;
     width: 5px;
+    transform-origin: 50% 95%;
     background: gray;
 }
 
-.hand.hour {
+.indicator .hand.hour {
     height: 45px;
     width: 6px;
+    transform-origin: 50% 89%;
     background: black;
 }
 
