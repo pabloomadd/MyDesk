@@ -1,10 +1,13 @@
-import { Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { FirestoreService } from '../../services/firestore.service';
+import { INote } from '../../../models/note.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink],
+  imports: [CommonModule, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -18,7 +21,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   minToDeg?: number;
   hrToDeg?: number;
 
+  notesList : INote[] = [];
+
   private intervalId?: ReturnType<typeof setInterval>;
+
+  private _apiFirestore = inject(FirestoreService)
 
   constructor() {
   }
@@ -28,6 +35,13 @@ export class HomeComponent implements OnInit, OnDestroy {
       const fecha = this.getTimeInTimeZone('America/Santiago');
       this.updateTime(fecha);
     }, 1000);
+
+    this._apiFirestore.getNotes().then((notes) => {
+      this.notesList = notes;
+    }).catch((error) => {
+      console.error('Error al Obtener Notes: ', error);
+    })
+
   }
 
   ngOnDestroy(): void {

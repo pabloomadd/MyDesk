@@ -45,6 +45,13 @@
                 <h3 class="text-white">Mis Notas</h3>
                 <div class="card m-3 p-3" id="vistaNotas">
 
+                    @for (note of notesList; track $index) {
+                    <div class="card border-3 shadow m-2 p-3">
+                        <h4>{{note.titulo}}</h4>
+                        <p>{{note.descripcion}}</p>
+                    </div>
+                    }
+
                 </div>
 
             </div>
