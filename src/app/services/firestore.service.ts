@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
 import { collection, getDocs, getFirestore } from "firebase/firestore";
 import { INote } from '../../models/note.model';
-
+import { environment } from '../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
@@ -11,17 +11,7 @@ import { INote } from '../../models/note.model';
 export class FirestoreService {
 
   private _http = inject(HttpClient);
-  private firebaseConfig = {
-
-    apiKey: "AIzaSyA_zpKITFuiZIwv3mH5Qwz72B33Bx97T4E",
-    authDomain: "mydesk-db.firebaseapp.com",
-    projectId: "mydesk-db",
-    storageBucket: "mydesk-db.appspot.com",
-    messagingSenderId: "159454335980",
-    appId: "1:159454335980:web:97dc89e3b878249b5c66c9",
-    measurementId: "G-PZS04D9H3P"
-
-  };
+  private firebaseConfig = environment.firebaseConfig;
 
   app = initializeApp(this.firebaseConfig);
   db = getFirestore(this.app);
