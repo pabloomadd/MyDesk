@@ -3,11 +3,12 @@ import { RouterLink } from '@angular/router';
 import { FirestoreService } from '../../services/firestore.service';
 import { INote } from '../../../models/note.model';
 import { CommonModule } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, ReactiveFormsModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -21,13 +22,24 @@ export class HomeComponent implements OnInit, OnDestroy {
   minToDeg?: number;
   hrToDeg?: number;
 
-  notesList : INote[] = [];
+  // Campos Nota
+  noteTitle: string = ''
+  noteDescrip: string = '';
+
+  noteForm!: FormGroup;
+
+
+  notesList: INote[] = [];
 
   private intervalId?: ReturnType<typeof setInterval>;
 
   private _apiFirestore = inject(FirestoreService)
 
-  constructor() {
+  constructor(private formBuilder: FormBuilder) {
+    this.noteForm = this.formBuilder.group({
+      title: ['', Validators.required],
+      descrip: ['', Validators.required]
+    })
   }
 
   ngOnInit(): void {
@@ -36,11 +48,14 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.updateTime(fecha);
     }, 1000);
 
-    this._apiFirestore.getNotes().then((notes) => {
-      this.notesList = notes;
-    }).catch((error) => {
-      console.error('Error al Obtener Notes: ', error);
-    })
+    this._apiFirestore.getNotes().subscribe({
+      next: (notes) => {
+        this.notesList = notes;
+      },
+      error: (error) => {
+        console.error('Error al obtener las notas: ', error);
+      }
+    });
 
   }
 
@@ -55,7 +70,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.secToDeg = (date.getSeconds() / 60) * 360;
     this.minToDeg = (date.getMinutes() / 60) * 360;
     this.hrToDeg = (date.getHours() / 12) * 360;
-
 
     // ROTAR SECUNDERO SEGUN TIEMPO ACTUAL
     this.secHand.nativeElement.style.transform = `rotate(${this.secToDeg}deg)`
@@ -86,4 +100,21 @@ export class HomeComponent implements OnInit, OnDestroy {
     return date;
   }
 
+
+  newNote(event: Event) {
+    event.preventDefault();
+    this._apiFirestore.newNote(this.noteForm.controls['title'].value,
+      this.noteForm.controls['descrip'].value
+    )
+
+  }
+
+  editNote(id: string) {
+
+  }
+
+  deleteNote(id: string){
+
+  }
 }
+

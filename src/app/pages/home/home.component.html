@@ -29,14 +29,15 @@
             <div class="card main-card">
                 <h4 class="text-white m-3">Escribir Nueva Nota</h4>
                 <div class="card m-3">
-                    <form id="task-form">
+                    <form [formGroup]="noteForm" (submit)="newNote($event)">
 
-                        <input type="text" id="taskTitle" class="form-control" placeholder="Titulo de la Nota">
+                        <input type="text" class="form-control" 
+                        placeholder="Titulo de la Nota" formControlName="title">
 
-                        <textarea id="taskDescrip" rows="5" class="form-control"
-                            placeholder="Descripción de la Nota"></textarea>
+                        <textarea rows="5" class="form-control"
+                            placeholder="Descripción de la Nota" formControlName="descrip"></textarea>
 
-                        <button class="btn btn-success m-2" id="btnMainNota" onclick="nuevaNota()">Crear Nota</button>
+                        <button class="btn btn-success m-2" type="submit">Crear Nota</button>
 
                     </form>
 
@@ -49,6 +50,10 @@
                     <div class="card border-3 shadow m-2 p-3">
                         <h4>{{note.titulo}}</h4>
                         <p>{{note.descripcion}}</p>
+                        <div>
+                            <button class="btn btn-warning m-1">Editar</button>
+                            <button class="btn btn-danger m-1">Borrar</button>
+                        </div>
                     </div>
                     }
 
