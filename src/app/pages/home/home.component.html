@@ -29,15 +29,18 @@
             <div class="card main-card">
                 <h4 class="text-white m-3">Escribir Nueva Nota</h4>
                 <div class="card m-3">
-                    <form [formGroup]="noteForm" (submit)="newNote($event)">
+                    <form [formGroup]="noteForm" (submit)="sumbit($event)">
 
-                        <input type="text" class="form-control" 
-                        placeholder="Titulo de la Nota" formControlName="title">
+                        <input type="text" class="form-control" placeholder="Titulo de la Nota" formControlName="title">
 
-                        <textarea rows="5" class="form-control"
-                            placeholder="Descripción de la Nota" formControlName="descrip"></textarea>
-
+                        <textarea rows="5" class="form-control" placeholder="Descripción de la Nota"
+                            formControlName="descrip"></textarea>
+                        @if (creating) {
                         <button class="btn btn-success m-2" type="submit">Crear Nota</button>
+                        }@else if(!creating) {
+                        <button class="btn btn-warning m-2" type="submit">Editar Nota</button>
+                        <button class="btn btn-danger m-2" (click)="cancelEditBtn()">Cancelar Edición</button>
+                        }
 
                     </form>
 
@@ -50,9 +53,10 @@
                     <div class="card border-3 shadow m-2 p-3">
                         <h4>{{note.titulo}}</h4>
                         <p>{{note.descripcion}}</p>
+                        <p></p>
                         <div>
-                            <button class="btn btn-warning m-1">Editar</button>
-                            <button class="btn btn-danger m-1">Borrar</button>
+                            <button class="btn btn-warning m-1" (click)="editNoteBtn(note.id)">Editar</button>
+                            <button class="btn btn-danger m-1" (click)="deleteNote(note.id)">Borrar</button>
                         </div>
                     </div>
                     }

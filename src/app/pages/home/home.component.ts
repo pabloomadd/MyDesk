@@ -22,9 +22,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   minToDeg?: number;
   hrToDeg?: number;
 
-  // Campos Nota
-  noteTitle: string = ''
-  noteDescrip: string = '';
+  creating: boolean = true
 
   noteForm!: FormGroup;
 
@@ -37,8 +35,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   constructor(private formBuilder: FormBuilder) {
     this.noteForm = this.formBuilder.group({
+      id: [''],
       title: ['', Validators.required],
-      descrip: ['', Validators.required]
+      descrip: ['', Validators.required],
+      
     })
   }
 
@@ -100,21 +100,56 @@ export class HomeComponent implements OnInit, OnDestroy {
     return date;
   }
 
-
-  newNote(event: Event) {
+  // Centralizar Submit con Condicionales y Banderas
+  sumbit(event: Event) {
     event.preventDefault();
-    this._apiFirestore.newNote(this.noteForm.controls['title'].value,
-      this.noteForm.controls['descrip'].value
-    )
+    const noteData = this.noteForm.value;
+
+    // Crear Nota
+    if (this.creating) {
+      this._apiFirestore.newNote(noteData.title, noteData.descrip);
+
+      // Editar Nota
+    } else {
+
+      const noteId = this.noteForm.get('id')?.value;
+      if (noteId) {
+        this._apiFirestore.editNote(noteId, noteData.title, noteData.descrip);
+        this.cancelEditBtn();
+      } else {
+        console.error("No se encontró el ID de la Nota al Editar.");
+      }
+    }
 
   }
 
-  editNote(id: string) {
+  editNoteBtn(id: string) {
+    this.creating = false;
+    this._apiFirestore.getNote(id).then((noteData) => {
+      if (noteData) {
+        this.noteForm.patchValue({
+          title: noteData['titulo'],
+          descrip: noteData['descripcion'],
+          id: id
+        });
+      }
+    }).catch((error) => {
+      console.log("Error al Obtener Nota: ", error)
+    })
 
   }
 
-  deleteNote(id: string){
+  cancelEditBtn() {
+    this.noteForm.patchValue({
+      title: '',
+      descrip: ''
+    })
+    this.creating = true;
+  }
 
+  async deleteNote(id: string) {
+    // Agregar Confirmacion de Borrado
+    this._apiFirestore.delNote(id);
   }
 }
 

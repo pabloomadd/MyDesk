@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
-import { addDoc, collection, getDocs, getFirestore, onSnapshot } from "firebase/firestore";
+import { addDoc, collection, getFirestore, onSnapshot, deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import { INote } from '../../models/note.model';
 import { environment } from '../../environments/environment.development';
 import { Observable } from 'rxjs';
@@ -47,7 +47,7 @@ export class FirestoreService {
     });
   }
 
-  async newNote (title: string, descrip:String){
+  async newNote(title: string, descrip: String) {
     try {
       const docRef = await addDoc(collection(this.db, "notes"), {
         titulo: title,
@@ -59,12 +59,28 @@ export class FirestoreService {
     }
   }
 
-  editNote(){
+  async getNote(id: string) {
+    const docRef = doc(this.db, "notes", id);
+    const docSnap = await getDoc(docRef);
 
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+    } else {
+      console.log("Ese registro no existe!");
+    }
+    return docSnap.data();
   }
 
-  delNote(){
-    
+  async editNote(id: string, title: string, descrip: string) {
+    const noteRef = doc(this.db, "notes", id)
+    await updateDoc(noteRef, {
+      titulo: title,
+      descripcion: descrip 
+    })
+  }
+
+  async delNote(id: string) {
+    await deleteDoc(doc(this.db, "notes", id));
   }
 
 }
