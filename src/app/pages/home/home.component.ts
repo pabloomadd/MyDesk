@@ -4,6 +4,8 @@ import { FirestoreService } from '../../services/firestore.service';
 import { INote } from '../../../models/note.model';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { WeatherService } from '../../services/weather.service';
+import { IWeather } from '../../../models/weather.model';
 
 @Component({
   selector: 'app-home',
@@ -18,35 +20,43 @@ export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('minHand', { static: false }) minHand!: ElementRef;
   @ViewChild('secHand', { static: false }) secHand!: ElementRef;
 
+  private intervalReloj?: ReturnType<typeof setInterval>;
+  private intervalClima?: ReturnType<typeof setInterval>;
+  private _apiFirestore = inject(FirestoreService);
+  private _apiWeather = inject(WeatherService);
+
+  //Variables
   secToDeg?: number;
   minToDeg?: number;
   hrToDeg?: number;
 
   creating: boolean = true
-
   noteForm!: FormGroup;
-
 
   notesList: INote[] = [];
 
-  private intervalId?: ReturnType<typeof setInterval>;
+  weatherDetail!: IWeather;
+  kelvinDiff: number = 273.15;
+  convC?: number;
 
-  private _apiFirestore = inject(FirestoreService)
+  ciudad: string = "Montevideo"
+  pais: string = "Uruguay"
 
   constructor(private formBuilder: FormBuilder) {
     this.noteForm = this.formBuilder.group({
       id: [''],
       title: ['', Validators.required],
       descrip: ['', Validators.required],
-      
+
     })
+
   }
 
+  //Mejorar Carga de Notas y de Clima
   ngOnInit(): void {
-    this.intervalId = setInterval(() => {
-      const fecha = this.getTimeInTimeZone('America/Santiago');
-      this.updateTime(fecha);
-    }, 1000);
+
+    // Funciones Principales
+    this.getWeather(this.ciudad, this.pais);
 
     this._apiFirestore.getNotes().subscribe({
       next: (notes) => {
@@ -56,51 +66,31 @@ export class HomeComponent implements OnInit, OnDestroy {
         console.error('Error al obtener las notas: ', error);
       }
     });
+    
+
+    //Bucles
+    this.intervalReloj = setInterval(() => {
+      const fecha = this.getTimeInTimeZone('America/Santiago');
+      this.updateTime(fecha);
+    }, 1000); //Cambio cada 1sec
+
+    this.intervalClima = setInterval(() => {
+      this.getWeather(this.ciudad, this.pais);
+    }, 600000); //Cambio cada 10mins
 
   }
 
   ngOnDestroy(): void {
-    if (this.intervalId) {
-      clearInterval(this.intervalId); // Limpia el intervalo cuando el componente se destruye
+    if (this.intervalReloj) {
+      clearInterval(this.intervalReloj);
+    }
+
+    if (this.intervalClima) {
+      clearInterval(this.intervalClima);
     }
   }
 
-  updateTime(date: Date) {
-
-    this.secToDeg = (date.getSeconds() / 60) * 360;
-    this.minToDeg = (date.getMinutes() / 60) * 360;
-    this.hrToDeg = (date.getHours() / 12) * 360;
-
-    // ROTAR SECUNDERO SEGUN TIEMPO ACTUAL
-    this.secHand.nativeElement.style.transform = `rotate(${this.secToDeg}deg)`
-    this.minHand.nativeElement.style.transform = `rotate(${this.minToDeg}deg)`
-    this.hrHand.nativeElement.style.transform = `rotate(${this.hrToDeg}deg)`
-
-  }
-
-  // OBTENER ZONA HORARIA
-  getTimeInTimeZone(timeZone: string): Date {
-    const timeString = new Intl.DateTimeFormat('en-US', {
-      timeZone,
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-      hour12: false
-    }).formatToParts(new Date());
-
-    const hour = Number(timeString.find(part => part.type === 'hour')?.value);
-    const minute = Number(timeString.find(part => part.type === 'minute')?.value);
-    const second = Number(timeString.find(part => part.type === 'second')?.value);
-
-    const date = new Date();
-    date.setHours(hour);
-    date.setMinutes(minute);
-    date.setSeconds(second);
-
-    return date;
-  }
-
-  // Centralizar Submit con Condicionales y Banderas
+  //FUNCIONES NOTAS
   sumbit(event: Event) {
     event.preventDefault();
     const noteData = this.noteForm.value;
@@ -151,5 +141,50 @@ export class HomeComponent implements OnInit, OnDestroy {
     // Agregar Confirmacion de Borrado
     this._apiFirestore.delNote(id);
   }
+
+  //FUNCIONES RELOJ
+  updateTime(date: Date) {
+
+    this.secToDeg = (date.getSeconds() / 60) * 360;
+    this.minToDeg = (date.getMinutes() / 60) * 360;
+    this.hrToDeg = (date.getHours() / 12) * 360;
+
+    // ROTAR SECUNDERO SEGUN TIEMPO ACTUAL
+    this.secHand.nativeElement.style.transform = `rotate(${this.secToDeg}deg)`
+    this.minHand.nativeElement.style.transform = `rotate(${this.minToDeg}deg)`
+    this.hrHand.nativeElement.style.transform = `rotate(${this.hrToDeg}deg)`
+  }
+
+  // OBTENER ZONA HORARIA
+  getTimeInTimeZone(timeZone: string): Date {
+    const timeString = new Intl.DateTimeFormat('en-US', {
+      timeZone,
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      hour12: false
+    }).formatToParts(new Date());
+
+    const hour = Number(timeString.find(part => part.type === 'hour')?.value);
+    const minute = Number(timeString.find(part => part.type === 'minute')?.value);
+    const second = Number(timeString.find(part => part.type === 'second')?.value);
+
+    const date = new Date();
+    date.setHours(hour);
+    date.setMinutes(minute);
+    date.setSeconds(second);
+
+    return date;
+  }
+
+  //FUNCIONES CLIMA 
+  getWeather(ciudad: string, pais: string) {
+    this._apiWeather.getWeatherByCity(ciudad, pais).subscribe((data: IWeather) => {
+      console.log(data)
+      this.weatherDetail = data
+      this.convC = Math.floor(data.main.temp - this.kelvinDiff);
+    });
+  }
+
 }
 
