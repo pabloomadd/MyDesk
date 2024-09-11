@@ -49,6 +49,7 @@
                 <h3 class="text-white">Mis Notas</h3>
                 <div class="card m-3 p-3" id="vistaNotas">
 
+                    @if (!loadingNotes) {
                     @for (note of notesList; track $index) {
                     <div class="card border-3 shadow m-2 p-3">
                         <h4>{{note.titulo}}</h4>
@@ -60,6 +61,16 @@
                         </div>
                     </div>
                     }
+                    }@else if (loadingNotes) {
+                    <div class="card border-3 shadow m-2 p-3">
+                        <div class="m-5">
+                            <img src="/assets/loading.gif" alt="" width="200px" height="200px">
+                            <H4>Cargando...</H4>
+                        </div>
+                    </div>
+                    }
+
+
 
                 </div>
 
@@ -69,10 +80,12 @@
         <div class="container col-3">
             <h4>Mis Widgets</h4>
 
-            <div class="card main-card m-3 pt-3 pb-1 align-items-center text-white">
+            <div class="card main-card m-3 pt-3 pb-4 align-items-center text-white">
 
                 <h5>Reloj</h5>
+            
                 <div class="clock text-dark">
+
                     <label style="--i:1"><span>1</span></label>
                     <label style="--i:2"><span>2</span></label>
                     <label style="--i:3"><span>3</span></label>
@@ -93,14 +106,16 @@
                     </div>
 
                 </div>
-                <div class="text-end m-2">
+                
 
-                </div>
+
+
 
             </div>
 
             <div class="card main-card m-3 pt-3 pb-1 text-white text-center">
                 <h5>Clima</h5>
+                @if (!loadingWeath) {
                 <div class="card rounded-2 m-2 weather-background text-white">
                     <div class="m-3">
                         <img src="https://openweathermap.org/img/wn/{{weatherDetail.weather[0].icon}}@2x.png"
@@ -112,6 +127,15 @@
                     </div>
 
                 </div>
+                }@else if(loadingWeath) {
+                <div class="card rounded-2 m-2 weather-background text-white">
+                    <div class="m-5">
+                        <img src="/assets/loading.gif" alt="" width="100px" height="100px">
+                        <H4>Cargando...</H4>
+                    </div>
+                </div>
+                }
+
             </div>
 
         </div>

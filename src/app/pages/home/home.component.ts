@@ -42,6 +42,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   ciudad: string = "Montevideo"
   pais: string = "Uruguay"
 
+  //Cargas
+  loadingWeath?: boolean;
+  loadingNotes?: boolean;
+  loadingClock?: boolean;
+
   constructor(private formBuilder: FormBuilder) {
     this.noteForm = this.formBuilder.group({
       id: [''],
@@ -55,24 +60,34 @@ export class HomeComponent implements OnInit, OnDestroy {
   //Mejorar Carga de Notas y de Clima
   ngOnInit(): void {
 
+    //Carga de Clima
+    this.loadingWeath = true;
+    this.loadingNotes = true;
+    this.loadingClock = true;
+
     // Funciones Principales
     this.getWeather(this.ciudad, this.pais);
 
     this._apiFirestore.getNotes().subscribe({
       next: (notes) => {
         this.notesList = notes;
+        this.loadingNotes = false;
       },
       error: (error) => {
         console.error('Error al obtener las notas: ', error);
       }
     });
-    
+
 
     //Bucles
+
     this.intervalReloj = setInterval(() => {
       const fecha = this.getTimeInTimeZone('America/Santiago');
       this.updateTime(fecha);
     }, 1000); //Cambio cada 1sec
+
+
+
 
     this.intervalClima = setInterval(() => {
       this.getWeather(this.ciudad, this.pais);
@@ -183,6 +198,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       console.log(data)
       this.weatherDetail = data
       this.convC = Math.floor(data.main.temp - this.kelvinDiff);
+      this.loadingWeath = false;
     });
   }
 
