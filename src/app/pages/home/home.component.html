@@ -77,13 +77,15 @@
             </div>
         </div>
 
+        @if (configReloj || configClima) {
         <div class="container col-3">
             <h4>Mis Widgets</h4>
 
+            @if (configReloj) {
             <div class="card main-card m-3 pt-3 pb-4 align-items-center text-white">
 
                 <h5>Reloj</h5>
-            
+
                 <div class="clock text-dark">
 
                     <label style="--i:1"><span>1</span></label>
@@ -106,13 +108,11 @@
                     </div>
 
                 </div>
-                
-
-
-
 
             </div>
+            }
 
+            @if (configClima){
             <div class="card main-card m-3 pt-3 pb-1 text-white text-center">
                 <h5>Clima</h5>
                 @if (!loadingWeath) {
@@ -137,8 +137,11 @@
                 }
 
             </div>
+            }
+
 
         </div>
+        }
 
     </div>
 </div>

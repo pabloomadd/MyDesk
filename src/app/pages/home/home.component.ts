@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { WeatherService } from '../../services/weather.service';
 import { IWeather } from '../../../models/weather.model';
+import { ConfigsService } from '../../services/configs.service';
 
 @Component({
   selector: 'app-home',
@@ -24,6 +25,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   private intervalClima?: ReturnType<typeof setInterval>;
   private _apiFirestore = inject(FirestoreService);
   private _apiWeather = inject(WeatherService);
+  private _apiConfig = inject(ConfigsService);
 
   //Variables
   secToDeg?: number;
@@ -39,13 +41,16 @@ export class HomeComponent implements OnInit, OnDestroy {
   kelvinDiff: number = 273.15;
   convC?: number;
 
-  ciudad: string = "Montevideo"
-  pais: string = "Uruguay"
-
   //Cargas
   loadingWeath?: boolean;
   loadingNotes?: boolean;
   loadingClock?: boolean;
+
+  //Configuraciones
+  configReloj?: boolean;
+  configClima?: boolean;
+  configCiudad?: string;
+  configPais?: string;
 
   constructor(private formBuilder: FormBuilder) {
     this.noteForm = this.formBuilder.group({
@@ -60,13 +65,26 @@ export class HomeComponent implements OnInit, OnDestroy {
   //Mejorar Carga de Notas y de Clima
   ngOnInit(): void {
 
+    //Carga de Configuraciones
+    this.configClima = this._apiConfig.getConfigValue('wClima');
+    this.configReloj = this._apiConfig.getConfigValue('wReloj');
+    this.configCiudad = this._apiConfig.getConfigValue('ciudad');
+    this.configPais = this._apiConfig.getConfigValue('pais');
+
+    console.log(
+      this.configClima,
+      this.configReloj,
+      this.configCiudad,
+      this.configPais);
+
     //Carga de Clima
     this.loadingWeath = true;
     this.loadingNotes = true;
     this.loadingClock = true;
 
     // Funciones Principales
-    this.getWeather(this.ciudad, this.pais);
+    this.getWeather(this.configCiudad || 'defectoCiudad', this.configPais || 'defaultPais');
+
 
     this._apiFirestore.getNotes().subscribe({
       next: (notes) => {
@@ -80,18 +98,15 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 
     //Bucles
-
     this.intervalReloj = setInterval(() => {
       const fecha = this.getTimeInTimeZone('America/Santiago');
       this.updateTime(fecha);
     }, 1000); //Cambio cada 1sec
 
 
-
-
-    this.intervalClima = setInterval(() => {
-      this.getWeather(this.ciudad, this.pais);
-    }, 600000); //Cambio cada 10mins
+    // this.intervalClima = setInterval(() => {
+    //   this.getWeather(this.configCiudad, this.configpais);
+    // }, 600000); //Cambio cada 10mins
 
   }
 
