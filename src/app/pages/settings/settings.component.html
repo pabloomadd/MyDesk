@@ -22,12 +22,12 @@
             <div class="m-1">
                 <h4 class="text-white">Widgets</h4>
                 <div class="row">
-                    <form class="needs-validation m-2" novalidate>
+                    <form [formGroup]="settingsForm" (submit)="guardarAjustes()">
 
                         <div class="btn-group m-2">
                             <div class="m-2">
-                                <input type="checkbox" class="btn-check" id="btncheck1">
-                                <label class="btn btn-outline-warning " for="btncheck1">
+                                <input type="checkbox" class="btn-check" id="btncheck" formControlName="wReloj">
+                                <label class="btn btn-outline-warning " for="btncheck">
                                     <span>Reloj</span>
                                     <br>
                                     <img src="assets/reloj.png" alt="">
@@ -35,20 +35,22 @@
                             </div>
 
                             <div class="m-2">
-                                <input type="checkbox" class="btn-check" id="btncheck2">
+                                <input type="checkbox" class="btn-check" id="btncheck2" formControlName="wClima">
                                 <label class="btn btn-outline-warning" for="btncheck2">
                                     <span>Clima</span>
                                     <br>
                                     <img src="assets/clima.png" alt="">
                                 </label>
                             </div>
+                            
                         </div>
-                        <br><br>
+                        <p class="text-white">*Los Widgets Iluminados son los Activos Actualmente</p>
+                        <br>
                         <h5 class="text-white">Ajustes de Zona</h5>
 
                         <div class="m-4">
                             <label class="form-label">Ciudad</label>
-                            <input type="text" class="form-control" placeholder="Ingrese una Ciudad">
+                            <input type="text" class="form-control" placeholder="Ingrese una Ciudad" formControlName="ciudad">
                             <div class="valid-feedback">
                                 Looks good!
                             </div>
@@ -56,7 +58,7 @@
 
                         <div class="m-4">
                             <label class="form-label">País</label>
-                            <input type="text" class="form-control" placeholder="Ingrese un País">
+                            <input type="text" class="form-control" placeholder="Ingrese un País" formControlName="pais">
                             <div class="valid-feedback">
                                 Looks good!
                             </div>

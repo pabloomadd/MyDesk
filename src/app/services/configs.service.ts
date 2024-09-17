@@ -14,12 +14,20 @@ export class ConfigsService {
 
   }
 
-  getConfig(): AppConfig{
+  getConfig(): AppConfig {
     return this.config
   }
 
-  getConfigValue(key: keyof AppConfig):any{
+  getConfigValue<T extends keyof AppConfig>(key: T): AppConfig[T] {
     return this.config[key];
+  }
+
+  updateConfig(updatedConfig: AppConfig) {
+    this.config = updatedConfig
+  }
+
+  updateConfigValue<T extends keyof AppConfig>(key: T, value: AppConfig[T]) {
+    this.config[key] = value;
   }
 
 

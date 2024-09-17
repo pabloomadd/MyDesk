@@ -71,12 +71,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.configCiudad = this._apiConfig.getConfigValue('ciudad');
     this.configPais = this._apiConfig.getConfigValue('pais');
 
-    console.log(
-      this.configClima,
-      this.configReloj,
-      this.configCiudad,
-      this.configPais);
-
     //Carga de Clima
     this.loadingWeath = true;
     this.loadingNotes = true;
@@ -98,15 +92,20 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 
     //Bucles
-    this.intervalReloj = setInterval(() => {
-      const fecha = this.getTimeInTimeZone('America/Santiago');
-      this.updateTime(fecha);
-    }, 1000); //Cambio cada 1sec
+    // Bucles verifican si el widget esta activo antes de ejecutar
+    if (this.configReloj) {
+      this.intervalReloj = setInterval(() => {
+        const fecha = this.getTimeInTimeZone('America/Santiago');
+        this.updateTime(fecha);
+      }, 1000); //Cambio cada 1sec
+    }
 
 
-    // this.intervalClima = setInterval(() => {
-    //   this.getWeather(this.configCiudad, this.configpais);
-    // }, 600000); //Cambio cada 10mins
+    if (this.configClima) {
+      this.intervalClima = setInterval(() => {
+        this.getWeather(this.configCiudad || 'defectoCiudad', this.configPais || 'defaultPais');
+      }, 600000); //Cambio cada 10mins
+    }
 
   }
 
@@ -210,7 +209,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   //FUNCIONES CLIMA 
   getWeather(ciudad: string, pais: string) {
     this._apiWeather.getWeatherByCity(ciudad, pais).subscribe((data: IWeather) => {
-      console.log(data)
       this.weatherDetail = data
       this.convC = Math.floor(data.main.temp - this.kelvinDiff);
       this.loadingWeath = false;
