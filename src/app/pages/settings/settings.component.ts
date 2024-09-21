@@ -46,7 +46,7 @@ export class SettingsComponent implements OnInit {
           this._apiConfig.updateConfigValue(key as keyof AppConfig, updatedConfig[typedKey]);
         }
       }
-      alert("Cambios Guardados")
+      alert("Ajustes Guardados")
     }
   }
 
