@@ -1,0 +1,26 @@
+<div class="container text-center pt-5">
+
+    <!-- Mensaje para Validaciones -->
+
+    <div class="card p-5 mx-auto align-items-center">
+        <h2 class="p-4">Registro de Usuario</h2>
+        <form class="m-2" [formGroup]="registerForm" (submit)="registro()">
+            <div class="m-4">
+                <label for="validationCustom03" class="form-label">Correo</label>
+                <input type="text" class="form-control" formControlName="email">
+            </div>
+
+            <div class="m-4">
+                <label for="validationCustom05" class="form-label">Contraseña</label>
+                <input type="text" class="form-control" formControlName="pass">
+
+            </div>
+            <div>
+                <button class="btn btn-primary m-2" type="submit">Registrarse</button>
+            </div>
+            <br>
+            <p>Ya tienes Cuenta? <a href="/login">Ingresa</a></p>
+        </form>
+
+        <button class="btn btn-info" (click)="botonHome()">Home</button>
+    </div>

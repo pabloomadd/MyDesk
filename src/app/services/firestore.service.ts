@@ -11,7 +11,6 @@ import { Observable } from 'rxjs';
 })
 export class FirestoreService {
 
-  private _http = inject(HttpClient);
   private firebaseConfig = environment.firebaseConfig;
 
   app = initializeApp(this.firebaseConfig);
