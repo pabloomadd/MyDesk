@@ -36,8 +36,9 @@ export class RegisterComponent implements OnInit {
     }
 
     try {
-      this._apiAuth.crearUsuarioEmailNPass(credential)
-      this._router.navigate([''])
+      const userCreds = this._apiAuth.crearUsuarioEmailNPass(credential);
+      console.log(userCreds)
+      this._router.navigate(['home'])
 
     } catch (error) {
       console.error("Error de Front a Registrar: ", error)

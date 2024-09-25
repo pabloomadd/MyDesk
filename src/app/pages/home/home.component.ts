@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, OnDestroy, ViewChild, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FirestoreService } from '../../services/firestore.service';
 import { INote } from '../../../models/note.model';
 import { CommonModule } from '@angular/common';
@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { WeatherService } from '../../services/weather.service';
 import { IWeather } from '../../../models/weather.model';
 import { ConfigsService } from '../../services/configs.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -26,6 +27,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   private _apiFirestore = inject(FirestoreService);
   private _apiWeather = inject(WeatherService);
   private _apiConfig = inject(ConfigsService);
+  private _apiLogin = inject(AuthService);
+  private _router = inject(Router);
 
   //Variables
   secToDeg?: number;
@@ -214,6 +217,13 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.loadingWeath = false;
     });
   }
+
+  logOut(){
+    this._apiLogin.logOut();
+    this._router.navigate(['login'])
+
+  }
+
 
 }
 

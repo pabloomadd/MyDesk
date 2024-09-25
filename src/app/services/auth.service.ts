@@ -42,4 +42,8 @@ export class AuthService {
       })
 
   }
+
+  logOut(){
+    return this.auth.signOut();
+  }
 }
