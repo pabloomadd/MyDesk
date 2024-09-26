@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, User } from 'firebase/auth';
 import { environment } from '../../environments/environment.development';
 import { Credential } from '../../models/login.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,19 @@ export class AuthService {
 
   app = initializeApp(this.firebaseConfig);
   auth = getAuth(this.app);
+
+  // Observable de Sesion Actual
+  readonly authState$: Observable<User | null> = new Observable((observer) => {
+    onAuthStateChanged(this.auth, (user => {
+      onAuthStateChanged(this.auth, (user) => {
+        observer.next(user); //Usuario Actual
+      }, (error) => {
+        observer.error(error);
+      }
+      )
+
+    }));
+  })
 
   crearUsuarioEmailNPass(credential: Credential) {
     createUserWithEmailAndPassword(this.auth, credential.email, credential.password)
@@ -43,7 +57,7 @@ export class AuthService {
 
   }
 
-  logOut(){
+  logOut() {
     return this.auth.signOut();
   }
 }

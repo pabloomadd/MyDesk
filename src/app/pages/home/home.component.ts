@@ -218,10 +218,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
-  logOut(){
+  logOut() {
     this._apiLogin.logOut();
-    this._router.navigate(['login'])
 
+    setTimeout(() => {
+      this._router.navigate(['login'])
+    }, 1500);
   }
 
 
