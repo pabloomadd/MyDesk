@@ -4,6 +4,7 @@ import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { Credential } from '../../../models/login.model';
 import { Router, RouterLink } from '@angular/router';
+import { Toast } from "bootstrap";
 
 @Component({
   selector: 'app-login',
@@ -39,6 +40,21 @@ export class LoginComponent implements OnInit {
     setTimeout(() => {
       this._router.navigate(['home'])
     }, 1200);
+
+  }
+
+  mostrarToast() {
+    const toastEl = document.getElementById('liveToast');
+
+    if (toastEl) {
+
+      const toast = new Toast(toastEl, {
+        autohide: true,
+        delay: 3000
+      });
+      toast.show();
+    }
+
 
   }
 

@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AuthService } from '../../services/auth.service';
 import { Credential } from '../../../models/login.model';
 import { Router, RouterLink } from '@angular/router';
+import { Toast } from "bootstrap";
 
 @Component({
   selector: 'app-register',
@@ -39,6 +40,8 @@ export class RegisterComponent implements OnInit {
       const userCreds = this._apiAuth.crearUsuarioEmailNPass(credential);
       console.log(credential)
 
+      this.mostrarToast()
+
       setTimeout(() => {
         this._router.navigate([''])
       }, 1500);
@@ -49,6 +52,18 @@ export class RegisterComponent implements OnInit {
     }
 
     this.registerForm.value;
+  }
+
+  mostrarToast() {
+    const toastEl = document.getElementById('liveToast');
+
+    if (toastEl) {
+      const toast = new Toast(toastEl, {
+        autohide: true,
+        delay: 3000
+      });
+      toast.show();
+    }
   }
 
 }
