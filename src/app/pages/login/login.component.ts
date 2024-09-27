@@ -3,12 +3,12 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { Credential } from '../../../models/login.model';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -34,14 +34,12 @@ export class LoginComponent implements OnInit {
       password: this.loginForm.value.pass || ''
     }
 
-    try {
-      this._auth.logInEmailNPass(credential);
+    this._auth.logInEmailNPass(credential);
+
+    setTimeout(() => {
       this._router.navigate(['home'])
-    } catch (error) {
-      console.log(error)
-    }
+    }, 1200);
+
   }
-
-
 
 }

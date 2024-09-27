@@ -3,12 +3,12 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Credential } from '../../../models/login.model';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
@@ -37,8 +37,12 @@ export class RegisterComponent implements OnInit {
 
     try {
       const userCreds = this._apiAuth.crearUsuarioEmailNPass(credential);
-      console.log(userCreds)
-      this._router.navigate(['home'])
+      console.log(credential)
+
+      setTimeout(() => {
+        this._router.navigate([''])
+      }, 1500);
+
 
     } catch (error) {
       console.error("Error de Front a Registrar: ", error)
@@ -46,10 +50,5 @@ export class RegisterComponent implements OnInit {
 
     this.registerForm.value;
   }
-
-  botonHome() {
-    this._router.navigate([''])
-  }
-
 
 }

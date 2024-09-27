@@ -12,7 +12,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   return authStateObs$().pipe(
     map((user) => {
       if (!user) {
-        router.navigate(['login'])
+        router.navigate([''])
         return false;
       } else {
         return true;
@@ -21,7 +21,6 @@ export const authGuard: CanActivateFn = (route, state) => {
     })
   )
 
-
 };
 
 export const publicGuard: CanActivateFn = (route, state) => {
@@ -29,7 +28,7 @@ export const publicGuard: CanActivateFn = (route, state) => {
   return authStateObs$().pipe(
     map((user) => {
       if (user) {
-        router.navigate(['home'])
+        router.navigate([''])
         return false
       }
       return true

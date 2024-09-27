@@ -7,11 +7,10 @@ import { LoginComponent } from './pages/login/login.component';
 import { authGuard, publicGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-    { path: 'login', canActivate: [publicGuard], component: LoginComponent },
+    { path: '', canActivate: [publicGuard], component: LoginComponent },
     { path: 'register', canActivate: [publicGuard], component: RegisterComponent },
     { path: 'home', canActivate: [authGuard], component: HomeComponent },
     { path: 'perfil', component: PerfilComponent },
     { path: 'ajustes', component: SettingsComponent },
-
-    { path: '**', redirectTo: 'login', pathMatch: 'full' }
+    { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
