@@ -16,8 +16,8 @@ export class FirestoreService {
   app = initializeApp(this.firebaseConfig);
   db = getFirestore(this.app);
 
-  
-//NOTAS
+
+  //NOTAS
   getNotes(): Observable<INote[]> {
     return new Observable((observer) => {
       const notes: INote[] = [];
@@ -76,7 +76,7 @@ export class FirestoreService {
     const noteRef = doc(this.db, "notes", id)
     await updateDoc(noteRef, {
       titulo: title,
-      descripcion: descrip 
+      descripcion: descrip
     })
   }
 
@@ -84,27 +84,27 @@ export class FirestoreService {
     await deleteDoc(doc(this.db, "notes", id));
   }
 
-//USERDATA
-async newUser(nombre: string, username: string, email: string) {
-  try {
-    const docRef = await addDoc(collection(this.db, "users"), {
-      
-      name: nombre,
-      username: username,
-      email: email,
-      vocacion: '',
-      ciudad: '',
-      pais: '',
-      //Configs
-      widgets: true,
-      wClock: true,
-      wWeather: true
-    });
-    console.log("Datos del Usuario Creados")
-    console.log("Usuario Creado ID: ", docRef.id);
+  //USERDATA
+  async newUser(nombre: string, username: string, email: string, uid: string) {
+    try {
+      const docRef = await addDoc(collection(this.db, "users"), {
+        name: nombre,
+        username: username,
+        email: email,
+        vocacion: '',
+        ciudad: '',
+        pais: '',
+        //Configs
+        widgets: true,
+        wClock: true,
+        wWeather: true,
+        userid: uid
+      });
+      console.log("Datos del Usuario Creados")
+      console.log("Usuario Creado ID: ", docRef.id);
 
-  } catch (error) {
-    console.error("Error al Agregar Usuario: ", error);
+    } catch (error) {
+      console.error("Error al Agregar Usuario: ", error);
+    }
   }
-}
 }

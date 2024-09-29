@@ -34,30 +34,34 @@ export class RegisterComponent implements OnInit {
 
 
   async registro() {
-  const credential: Credential = {
-    email: this.registerForm.value.email || '',
-    password: this.registerForm.value.pass || ''
-  }
-
-  try {
-    //Creación en Auth
-    const userCred = await this._apiAuth.crearUsuarioEmailNPass(credential);
-
-    //Verificación de éxito en la creación del usuario
-    if (userCred && userCred.user) {
-      //Creación en Firestore
-      await this._firestore.newUser(
-        this.registerForm.value.name,
-        this.registerForm.value.username,
-        this.registerForm.value.email
-      );
-
-      console.log('Registro Realizado');
+    try {
+      const credential: Credential = {
+        email: this.registerForm.value.email || '',
+        password: this.registerForm.value.pass || ''
+      };
+  
+      const userCred = await this._apiAuth.crearUsuarioEmailNPass(credential);
+  
+      //Cerrar Sesión para Manejarlo en Login
+      await this._apiAuth.logOut();  
+  
+      const uid = userCred?.user?.uid;
+      if (uid) {
+        await this._firestore.newUser(
+          this.registerForm.value.name,
+          this.registerForm.value.username,
+          this.registerForm.value.email,
+          uid
+        );
+      }
+  
+      console.log('Registro realizado con éxito'); 
+      this.mostrarToast()
+  
+    } catch (error) {
+      console.error('Error durante el registro: ', error);
     }
-  } catch (error) {
-    console.error('Error durante el registro: ', error);
   }
-}
 
   mostrarToast() {
     const toastEl = document.getElementById('liveToast');
@@ -65,7 +69,7 @@ export class RegisterComponent implements OnInit {
     if (toastEl) {
       const toast = new Toast(toastEl, {
         autohide: true,
-        delay: 3000
+        delay: 2000
       });
       toast.show();
     }
