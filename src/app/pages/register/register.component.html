@@ -2,16 +2,27 @@
 
     <!-- Mensaje para Validaciones -->
 
-    <div class="card p-5 mx-auto align-items-center">
+    <div class="card p-3 mx-auto align-items-center">
         <h2 class="p-4">Registro de Usuario</h2>
         <form class="m-2" [formGroup]="registerForm" (submit)="registro()">
+
             <div class="m-4">
-                <label for="validationCustom03" class="form-label">Correo</label>
+                <label class="form-label">Nombre</label>
+                <input type="text" class="form-control" formControlName="name">
+            </div>
+
+            <div class="m-4">
+                <label class="form-label">Nombre de Usuario</label>
+                <input type="text" class="form-control" formControlName="username">
+            </div>
+
+            <div class="m-4">
+                <label class="form-label">Correo Eléctronico</label>
                 <input type="text" class="form-control" formControlName="email">
             </div>
 
             <div class="m-4">
-                <label for="validationCustom05" class="form-label">Contraseña</label>
+                <label class="form-label">Contraseña</label>
                 <input type="text" class="form-control" formControlName="pass">
 
             </div>

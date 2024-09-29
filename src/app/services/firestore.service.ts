@@ -16,6 +16,8 @@ export class FirestoreService {
   app = initializeApp(this.firebaseConfig);
   db = getFirestore(this.app);
 
+  
+//NOTAS
   getNotes(): Observable<INote[]> {
     return new Observable((observer) => {
       const notes: INote[] = [];
@@ -82,4 +84,27 @@ export class FirestoreService {
     await deleteDoc(doc(this.db, "notes", id));
   }
 
+//USERDATA
+async newUser(nombre: string, username: string, email: string) {
+  try {
+    const docRef = await addDoc(collection(this.db, "users"), {
+      
+      name: nombre,
+      username: username,
+      email: email,
+      vocacion: '',
+      ciudad: '',
+      pais: '',
+      //Configs
+      widgets: true,
+      wClock: true,
+      wWeather: true
+    });
+    console.log("Datos del Usuario Creados")
+    console.log("Usuario Creado ID: ", docRef.id);
+
+  } catch (error) {
+    console.error("Error al Agregar Usuario: ", error);
+  }
+}
 }
