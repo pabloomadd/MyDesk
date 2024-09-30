@@ -18,7 +18,7 @@ export class AuthService {
   auth = getAuth(this.app);
   db = getFirestore(this.app);
 
-  //AUTH
+  ///AUTH
 
   // Observable de Sesion Actual
   readonly authState$: Observable<User | null> = new Observable((observer) => {
@@ -67,13 +67,64 @@ export class AuthService {
     return this.auth.signOut();
   }
 
-  //USERDATA
+  ///USERDATA
   getCurrentUID() {
     return this.auth.currentUser?.uid
   }
 
-  async getUserData() {
+  async newUser(nombre: string, username: string, email: string, uid: string) {
+    try {
+      const docRef = await addDoc(collection(this.db, "users"), {
+        name: nombre,
+        username: username,
+        email: email,
+        vocacion: '',
+        ciudad: '',
+        pais: '',
+        //Configs
+        widgets: true,
+        wClock: true,
+        wWeather: true,
+        userid: uid
+      });
+      console.log("Datos del Usuario Creados")
+      console.log("Usuario Creado ID: ", docRef.id);
 
+    } catch (error) {
+      console.error("Error al Agregar Usuario: ", error);
+    }
+  }
+
+  getUserDocument(): Observable<any> {
+    return new Observable((observer) => {
+      // Obtener el UID del usuario actual
+      const uid = this.getCurrentUID();
+
+      // Verificar si se obtuvo el UID
+      if (!uid) {
+        observer.error('No se pudo obtener el UID del usuario');
+        return;
+      }
+
+      // Referencia a la colección 'users' con filtro por UID
+      const userCollection = query(collection(this.db, 'users'), where('userid', '==', uid));
+
+      // Escuchar cambios en tiempo real con onSnapshot
+      const unsubscribe = onSnapshot(userCollection, (querySnapshot) => {
+        if (!querySnapshot.empty) {
+          // Emitir el primer documento encontrado, asumiendo que hay solo uno por UID
+          const userDoc = querySnapshot.docs[0];
+          observer.next(userDoc.data()); // Emitir los datos del usuario
+        } else {
+          observer.error('El documento del usuario no existe');
+        }
+      }, (error) => {
+        observer.error(error); // Manejar cualquier error
+      });
+
+      // Retorna la función de limpieza cuando el observable se complete
+      return () => unsubscribe();
+    });
   }
 
 
@@ -123,18 +174,18 @@ export class AuthService {
     try {
       // Obtener el UID del usuario actual
       const uid = this.getCurrentUID();
-  
+
       if (!uid) {
         throw new Error('No se pudo obtener el UID del usuario');
       }
-  
+
       // Agregar la nota a la colección con el UID
       const docRef = await addDoc(collection(this.db, "notes"), {
         titulo: title,
         descripcion: descrip,
         uid: uid // Añadir el UID del usuario a la nota
       });
-  
+
       console.log("Document written with ID: ", docRef.id);
     } catch (error) {
       console.error("Error adding document: ", error);
@@ -165,28 +216,6 @@ export class AuthService {
     await deleteDoc(doc(this.db, "notes", id));
   }
 
-  //USERDATA
-  async newUser(nombre: string, username: string, email: string, uid: string) {
-    try {
-      const docRef = await addDoc(collection(this.db, "users"), {
-        name: nombre,
-        username: username,
-        email: email,
-        vocacion: '',
-        ciudad: '',
-        pais: '',
-        //Configs
-        widgets: true,
-        wClock: true,
-        wWeather: true,
-        userid: uid
-      });
-      console.log("Datos del Usuario Creados")
-      console.log("Usuario Creado ID: ", docRef.id);
 
-    } catch (error) {
-      console.error("Error al Agregar Usuario: ", error);
-    }
-  }
 
 }

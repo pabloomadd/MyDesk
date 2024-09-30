@@ -33,6 +33,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   minToDeg?: number;
   hrToDeg?: number;
 
+  //Datos
+  nombre?: string;
+  vocacion?: string;
+
   creating: boolean = true
   noteForm!: FormGroup;
 
@@ -67,8 +71,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     //Carga de Configuraciones
-    this.configClima = this._apiConfig.getConfigValue('wClima');
-    this.configReloj = this._apiConfig.getConfigValue('wReloj');
+    this.getData();
+    
     this.configCiudad = this._apiConfig.getConfigValue('ciudad');
     this.configPais = this._apiConfig.getConfigValue('pais');
 
@@ -227,6 +231,26 @@ export class HomeComponent implements OnInit, OnDestroy {
   getUID() {
     const UID = this._apiAuth.getCurrentUID()
     console.log("UID Actual: ", UID)
+  }
+
+  getData() {
+    this._apiAuth.getUserDocument().subscribe(
+      (userData) => {
+        console.log('Datos Obtenidos: ', userData)
+        this.nombre = userData.name;
+        this.vocacion = userData.vocacion;
+
+        //Ajustar WClima para Ciudad y Pais Vacios
+        //this.configCiudad = userData.ciudad;
+        //this.configPais = userData.pais;
+        
+        this.configClima = userData.wWeather;
+        this.configReloj = userData.wClock;
+      },
+      (error) => {
+        console.error('Error al Obtener Datos: ', error)
+      }
+    );
   }
 }
 
