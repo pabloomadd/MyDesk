@@ -5,7 +5,6 @@ import { AuthService } from '../../services/auth.service';
 import { Credential } from '../../../models/login.model';
 import { Router, RouterLink } from '@angular/router';
 import { Toast } from "bootstrap";
-import { FirestoreService } from '../../services/firestore.service';
 
 @Component({
   selector: 'app-register',
@@ -18,7 +17,6 @@ export class RegisterComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder) { }
   private _apiAuth = inject(AuthService)
-  private _firestore = inject(FirestoreService)
   private _router = inject(Router)
 
   registerForm!: FormGroup;
@@ -47,7 +45,7 @@ export class RegisterComponent implements OnInit {
   
       const uid = userCred?.user?.uid;
       if (uid) {
-        await this._firestore.newUser(
+        await this._apiAuth.newUser(
           this.registerForm.value.name,
           this.registerForm.value.username,
           this.registerForm.value.email,

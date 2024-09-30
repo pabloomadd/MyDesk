@@ -1,6 +1,5 @@
 import { Component, ElementRef, OnInit, OnDestroy, ViewChild, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { FirestoreService } from '../../services/firestore.service';
 import { INote } from '../../../models/note.model';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -24,10 +23,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   private intervalReloj?: ReturnType<typeof setInterval>;
   private intervalClima?: ReturnType<typeof setInterval>;
-  private _apiFirestore = inject(FirestoreService);
   private _apiWeather = inject(WeatherService);
   private _apiConfig = inject(ConfigsService);
-  private _apiLogin = inject(AuthService);
+  private _apiAuth = inject(AuthService);
   private _router = inject(Router);
 
   //Variables
@@ -83,7 +81,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.getWeather(this.configCiudad || 'defectoCiudad', this.configPais || 'defaultPais');
 
 
-    this._apiFirestore.getNotes().subscribe({
+    this._apiAuth.getNotes().subscribe({
       next: (notes) => {
         this.notesList = notes;
         this.loadingNotes = false;
@@ -129,14 +127,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     // Crear Nota
     if (this.creating) {
-      this._apiFirestore.newNote(noteData.title, noteData.descrip);
+      this._apiAuth.newNote(noteData.title, noteData.descrip);
 
       // Editar Nota
     } else {
 
       const noteId = this.noteForm.get('id')?.value;
       if (noteId) {
-        this._apiFirestore.editNote(noteId, noteData.title, noteData.descrip);
+        this._apiAuth.editNote(noteId, noteData.title, noteData.descrip);
         this.cancelEditBtn();
       } else {
         console.error("No se encontró el ID de la Nota al Editar.");
@@ -147,7 +145,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   editNoteBtn(id: string) {
     this.creating = false;
-    this._apiFirestore.getNote(id).then((noteData) => {
+    this._apiAuth.getNote(id).then((noteData) => {
       if (noteData) {
         this.noteForm.patchValue({
           title: noteData['titulo'],
@@ -171,7 +169,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   async deleteNote(id: string) {
     // Agregar Confirmacion de Borrado
-    this._apiFirestore.delNote(id);
+    this._apiAuth.delNote(id);
   }
 
   //FUNCIONES RELOJ
@@ -219,13 +217,16 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   logOut() {
-    this._apiLogin.logOut();
+    this._apiAuth.logOut();
 
     setTimeout(() => {
       this._router.navigate(['login'])
     }, 1500);
   }
 
-
+  getUID() {
+    const UID = this._apiAuth.getCurrentUID()
+    console.log("UID Actual: ", UID)
+  }
 }
 
