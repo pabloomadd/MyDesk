@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ConfigsService } from '../../services/configs.service';
 import { AppConfig } from '../../../models/config.model';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-settings',
@@ -15,39 +16,61 @@ import { AppConfig } from '../../../models/config.model';
 export class SettingsComponent implements OnInit {
 
   settingsForm!: FormGroup
-  private _apiConfig = inject(ConfigsService)
+  private _apiConfig = inject(ConfigsService);
+  private _apiAuth = inject(AuthService);
+
+  ciudad?: string;
+  pais?: string;
+
+  configClima?: boolean;
+  configReloj?: boolean;
+
 
   constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
 
-    const config: AppConfig = this._apiConfig.getConfig();
+    this.getData();
 
     //Inicializar settingsForm
     this.settingsForm = this.formBuilder.group({
-      wReloj: [config.wReloj],
-      wClima: [config.wClima],
-      ciudad: [config.ciudad],
-      pais: [config.pais]
+      wReloj: [this.configReloj],
+      wClima: [this.configClima],
+      ciudad: [this.ciudad],
+      pais: [this.pais]
     })
-
 
   }
 
-  guardarAjustes() {
+  async guardarAjustes() {
     if (this.settingsForm.valid) {
       const updatedConfig: AppConfig = this.settingsForm.value;
+      console.log(updatedConfig);
 
-      //Actualizar cada Valor
-      for (const key in updatedConfig) {
-        if (updatedConfig.hasOwnProperty(key)) {
-          //Asegura el tipo de key de AppConfig Interface
-          const typedKey = key as keyof AppConfig;
-          this._apiConfig.updateConfigValue(key as keyof AppConfig, updatedConfig[typedKey]);
-        }
-      }
-      alert("Ajustes Guardados")
+      // Actualizar en Firestore
+      await this._apiAuth.editUserDocument(updatedConfig);
+
+      alert("Ajustes Guardados");
     }
+  }
+
+  getData() {
+    this._apiAuth.getUserDocument().subscribe(
+      (userData) => {
+        console.log('Datos Obtenidos: ', userData);
+
+        // Actualizar los valores del formulario con patchValue
+        this.settingsForm.patchValue({
+          ciudad: userData.ciudad,
+          pais: userData.pais,
+          wClima: userData.wWeather,
+          wReloj: userData.wClock
+        });
+      },
+      (error) => {
+        console.error('Error al Obtener Datos: ', error);
+      }
+    );
   }
 
 }

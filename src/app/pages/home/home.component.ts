@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { WeatherService } from '../../services/weather.service';
 import { IWeather } from '../../../models/weather.model';
-import { ConfigsService } from '../../services/configs.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -24,7 +23,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   private intervalReloj?: ReturnType<typeof setInterval>;
   private intervalClima?: ReturnType<typeof setInterval>;
   private _apiWeather = inject(WeatherService);
-  private _apiConfig = inject(ConfigsService);
   private _apiAuth = inject(AuthService);
   private _router = inject(Router);
 
@@ -69,22 +67,36 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   //Mejorar Carga de Notas y de Clima
   ngOnInit(): void {
+    // Carga de Configuraciones
+    this.getData()
+      .then(() => {
+        // Carga de Clima
+        this.loadingWeath = true;
+        this.loadingNotes = true;
+        this.loadingClock = true;
 
-    //Carga de Configuraciones
-    this.getData();
-    
-    this.configCiudad = this._apiConfig.getConfigValue('ciudad');
-    this.configPais = this._apiConfig.getConfigValue('pais');
+        // Ejecuta getWeather después de que getData esté listo, usando valores predeterminados si configCiudad o configPais están undefined
+        this.getWeather(this.configCiudad || 'defaultCiudad', this.configPais || 'defaultPais');
 
-    //Carga de Clima
-    this.loadingWeath = true;
-    this.loadingNotes = true;
-    this.loadingClock = true;
+        // Bucles que verifican si los widgets están activos antes de ejecutar
+        if (this.configReloj) {
+          this.intervalReloj = setInterval(() => {
+            const fecha = this.getTimeInTimeZone('America/Santiago');
+            this.updateTime(fecha);
+          }, 1000); // Actualización cada 1 segundo
+        }
 
-    // Funciones Principales
-    this.getWeather(this.configCiudad || 'defectoCiudad', this.configPais || 'defaultPais');
+        if (this.configClima) {
+          this.intervalClima = setInterval(() => {
+            this.getWeather(this.configCiudad || 'defaultCiudad', this.configPais || 'defaultPais');
+          }, 600000); // Actualización cada 10 minutos
+        }
+      })
+      .catch((error: any) => {
+        console.error('Error al cargar los datos:', error);
+      });
 
-
+    // Obtener las notas
     this._apiAuth.getNotes().subscribe({
       next: (notes) => {
         this.notesList = notes;
@@ -94,24 +106,6 @@ export class HomeComponent implements OnInit, OnDestroy {
         console.error('Error al obtener las notas: ', error);
       }
     });
-
-
-    //Bucles
-    // Bucles verifican si el widget esta activo antes de ejecutar
-    if (this.configReloj) {
-      this.intervalReloj = setInterval(() => {
-        const fecha = this.getTimeInTimeZone('America/Santiago');
-        this.updateTime(fecha);
-      }, 1000); //Cambio cada 1sec
-    }
-
-
-    if (this.configClima) {
-      this.intervalClima = setInterval(() => {
-        this.getWeather(this.configCiudad || 'defectoCiudad', this.configPais || 'defaultPais');
-      }, 600000); //Cambio cada 10mins
-    }
-
   }
 
   ngOnDestroy(): void {
@@ -233,24 +227,26 @@ export class HomeComponent implements OnInit, OnDestroy {
     console.log("UID Actual: ", UID)
   }
 
-  getData() {
-    this._apiAuth.getUserDocument().subscribe(
-      (userData) => {
-        console.log('Datos Obtenidos: ', userData)
-        this.nombre = userData.name;
-        this.vocacion = userData.vocacion;
+  getData(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this._apiAuth.getUserDocument().subscribe(
+        (userData) => {
+          console.log('Datos Obtenidos: ', userData);
 
-        //Ajustar WClima para Ciudad y Pais Vacios
-        //this.configCiudad = userData.ciudad;
-        //this.configPais = userData.pais;
-        
-        this.configClima = userData.wWeather;
-        this.configReloj = userData.wClock;
-      },
-      (error) => {
-        console.error('Error al Obtener Datos: ', error)
-      }
-    );
+          // Ajustar WClima para Ciudad y Pais Vacios
+          this.configCiudad = userData.ciudad;
+          this.configPais = userData.pais;
+          this.configClima = userData.wWeather;
+          this.configReloj = userData.wClock;
+
+          resolve(); // Datos cargados con éxito
+        },
+        (error) => {
+          console.error('Error al Obtener Datos: ', error);
+          reject(error); // Error al cargar los datos
+        }
+      );
+    });
   }
 }
 
