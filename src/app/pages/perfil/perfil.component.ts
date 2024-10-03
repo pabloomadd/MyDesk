@@ -1,9 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { UserdataService } from '../../services/userdata.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Data } from '../../../models/userdata,model';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
+import { AppConfig } from '../../../models/config.model';
+import { Data } from '../../../models/userdata,model';
 
 @Component({
   selector: 'app-perfil',
@@ -15,36 +16,55 @@ import { CommonModule } from '@angular/common';
 export class PerfilComponent implements OnInit {
 
   userForm!: FormGroup;
-  private _apiData = inject(UserdataService);
+  private _apiAuth = inject(AuthService);
+
+  nombre?: string;
+  vocacion?: string;
+  usuario?: string;
+  correo?: string;
 
   constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
-    const data: Data = this._apiData.getUserData();
+    this.getData();
 
+    //Inicializar settingsForm
     this.userForm = this.formBuilder.group({
-      nombre: [data.nombre],
-      apellido: [data.apellido],
-      vocacion: [data.vocacion],
-      username: [data.username],
-      email: [data.email]
-
+      name: [this.nombre],
+      vocacion: [this.vocacion],
+      username: [this.usuario],
+      email: [this.correo]
     })
   }
 
-  guardarDatos() {
-    if (this.userForm.valid) {
-      const updatedData: Data = this.userForm.value;
+  getData() {
+    this._apiAuth.getUserDocument().subscribe(
+      (userData) => {
+        console.log('Datos Obtenidos: ', userData);
 
-      //Actualizar cada Valor
-      for (const key in updatedData) {
-        if (updatedData.hasOwnProperty(key)) {
-          //Asegura el tipo de key de AppConfig Interface
-          const typedKey = key as keyof Data;
-          this._apiData.updateDataValue(key as keyof Data, updatedData[typedKey]);
-        }
+        // Actualizar los valores del formulario con patchValue
+        this.userForm.patchValue({
+          name: userData.name,
+          vocacion: userData.vocacion,
+          username: userData.username,
+          email: userData.email
+        });
+      },
+      (error) => {
+        console.error('Error al Obtener Datos: ', error);
       }
-      alert("Datos de Perfil Guardados")
+    );
+  }
+
+  async guardarAjustes() {
+    if (this.userForm.valid) {
+      const updatedConfig: Data = this.userForm.value;
+      console.log(updatedConfig);
+
+      // Actualizar en Firestore
+      await this._apiAuth.editUserDocument(updatedConfig);
+
+      alert("Ajustes Guardados");
     }
   }
 }

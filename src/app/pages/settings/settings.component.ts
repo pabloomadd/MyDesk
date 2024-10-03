@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { ConfigsService } from '../../services/configs.service';
 import { AppConfig } from '../../../models/config.model';
 import { AuthService } from '../../services/auth.service';
 
@@ -16,7 +15,6 @@ import { AuthService } from '../../services/auth.service';
 export class SettingsComponent implements OnInit {
 
   settingsForm!: FormGroup
-  private _apiConfig = inject(ConfigsService);
   private _apiAuth = inject(AuthService);
 
   ciudad?: string;

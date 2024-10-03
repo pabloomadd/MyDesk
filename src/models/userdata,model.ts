@@ -1,6 +1,5 @@
 export interface Data{
-    nombre: string;
-    apellido: string;
+    name: string;
     vocacion: string;
     username: string;
     email: string;

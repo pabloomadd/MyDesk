@@ -233,6 +233,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         (userData) => {
           console.log('Datos Obtenidos: ', userData);
 
+          this.nombre = userData.name;
+          this.vocacion = userData.vocacion
           // Ajustar WClima para Ciudad y Pais Vacios
           this.configCiudad = userData.ciudad;
           this.configPais = userData.pais;
