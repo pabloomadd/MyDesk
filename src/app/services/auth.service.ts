@@ -48,19 +48,26 @@ export class AuthService {
       });
   }
 
-  logInEmailNPass(credential: Credential) {
-    signInWithEmailAndPassword(this.auth, credential.email, credential.password)
+  logInEmailNPass(credential: Credential): Promise<void> {
+    return signInWithEmailAndPassword(this.auth, credential.email, credential.password)
       .then((userCredential) => {
+        
         const user = userCredential.user;
+        console.log('Usuario autenticado:', user);
       })
       .catch((error) => {
-        const erroCode = error.code;
+        const errorCode = error.code;
         const errorMsg = error.message;
-        console.log('Error al Registrarse')
-        console.log('Codigo de Error: ', erroCode)
-        console.log('Mesnaje de Error: ', errorMsg)
-      })
-
+  
+        if (errorCode === 'auth/user-not-found' || errorCode === 'auth/wrong-password') {
+          console.error('Error: Contraseña Incorrecta.');
+        } else {
+          
+          console.error('Error al loguearse:', errorMsg);
+        }
+  
+        throw error;
+      });
   }
 
   logOut() {
@@ -131,30 +138,30 @@ export class AuthService {
   async editUserDocument(updatedData: any): Promise<void> {
     // Obtener el UID del usuario actual
     const uid = this.getCurrentUID();
-  
+
     // Verificar si se obtuvo el UID
     if (!uid) {
       throw new Error('No se pudo obtener el UID del usuario');
     }
-  
+
     try {
       // Referencia al documento del usuario en la colección 'users' filtrado por el UID
       const userCollection = query(
         collection(this.db, 'users'),
         where('userid', '==', uid)
       );
-  
+
       // Obtener el documento con el UID
       const querySnapshot = await getDocs(userCollection);
-  
+
       if (!querySnapshot.empty) {
         // Asumimos que solo hay un documento por UID, obtener el primer documento
         const userDoc = querySnapshot.docs[0];
-  
+
         // Actualizar el documento con los nuevos datos
         const userDocRef = doc(this.db, 'users', userDoc.id);
         await updateDoc(userDocRef, updatedData);
-  
+
         console.log('Documento del usuario actualizado correctamente');
       } else {
         throw new Error('El documento del usuario no existe');

@@ -5,12 +5,23 @@
         <form class="m-2" [formGroup]="loginForm" (submit)="acceder()">
             <div class="m-4">
                 <label class="form-label">Correo</label>
-                <input type="text" class="form-control" formControlName="email">
+                <input [ngClass]="{'is-invalid': hasErrors('email', 'required') || hasErrors('email', 'email')}"
+                    type="text" class="form-control" formControlName="email">
+                @if(hasErrors('email', 'required')){
+                <div class="text-danger">Correo requerido</div>
+                }
+                @if (hasErrors('email', 'email')) {
+                <div class="text-danger">Formato de Correo Inválido</div>
+                }
             </div>
 
             <div class="m-4">
                 <label class="form-label">Contraseña</label>
-                <input type="text" class="form-control" formControlName="pass">
+                <input [ngClass]="{'is-invalid': hasErrors('pass', 'required')}" type="text" class="form-control"
+                    formControlName="pass">
+                @if(hasErrors('pass', 'required')){
+                <div class="text-danger">Contraseña es requerida</div>
+                }
 
             </div>
             <div>
@@ -19,12 +30,20 @@
             <br>
             <p>Aun no tienes Cuenta? <a [routerLink]="['/register']">Registrate</a></p>
         </form>
-        
+
         <div class="toast-container position-fixed top-0 p-3"></div>
         <div id="liveToast" class="toast" role="alert">
 
-            <div class="toast-body bg-success-subtl">
-                <strong>Usuario Registrado con Éxito</strong>
+            <div class="toast-body text-bg-success">
+                <strong>Logueando Usuario...</strong>
+            </div>
+        </div>
+
+        <div class="toast-container align-top p-3"></div>
+        <div id="dangerToast" class="toast" role="alert">
+
+            <div class="toast-body text-bg-danger">
+                <strong>Datos Incorrectos. Compruébalos!</strong>
             </div>
         </div>
     </div>
