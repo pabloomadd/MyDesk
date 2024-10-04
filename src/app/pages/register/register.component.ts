@@ -23,51 +23,85 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
-      name: ['', Validators.required],
-      username: ['', Validators.required],
+      name: ['', [Validators.required, Validators.minLength(5)]],
+      username: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.email, Validators.required]],
-      pass: ['', Validators.required],
+      pass: ['', [Validators.required, Validators.minLength(6)]],
     })
   }
 
 
   async registro() {
-    try {
-      const credential: Credential = {
-        email: this.registerForm.value.email || '',
-        password: this.registerForm.value.pass || ''
-      };
+    if (this.registerForm.valid) {
+      const username = this.registerForm.value.username || '';
   
-      const userCred = await this._apiAuth.crearUsuarioEmailNPass(credential);
+      try {
+        // Verificar si el username ya está en uso
+        const usernameExists = await this._apiAuth.checkUsernameExists(username);
+        
+        if (usernameExists) {
+          console.error('El nombre de usuario ya está en uso');
+          this.toastMal('El Nombre de Usuario ya está en uso'); 
+          return; // Detener el registro
+        }
   
-      //Cerrar Sesión para Manejarlo en Login
-      await this._apiAuth.logOut();  
+        const credential: Credential = {
+          email: this.registerForm.value.email || '',
+          password: this.registerForm.value.pass || ''
+        };
   
-      const uid = userCred?.user?.uid;
-      if (uid) {
-        await this._apiAuth.newUser(
-          this.registerForm.value.name,
-          this.registerForm.value.username,
-          this.registerForm.value.email,
-          uid
-        );
+        const userCred = await this._apiAuth.crearUsuarioEmailNPass(credential);
+  
+        await this._apiAuth.logOut();
+  
+        const uid = userCred?.user?.uid;
+        if (uid) {
+          await this._apiAuth.newUser(
+            this.registerForm.value.name,
+            username,
+            this.registerForm.value.email,
+            uid
+          );
+        }
+  
+        console.log('Registro realizado con éxito');
+        this.toastBien();
+        
+      } catch (error) {
+        console.error('Error durante el registro: ', error);
+        this.toastMal('El Correo Electrónico ya está en uso');
       }
-  
-      console.log('Registro realizado con éxito'); 
-      this.mostrarToast()
-  
-    } catch (error) {
-      console.error('Error durante el registro: ', error);
     }
   }
 
-  mostrarToast() {
+  hasErrors(controlName: string, errorType: string) {
+    return this.registerForm.get(controlName)?.hasError(errorType) && this.registerForm.get(controlName)?.touched;
+  }
+
+  toastBien() {
     const toastEl = document.getElementById('liveToast');
 
     if (toastEl) {
       const toast = new Toast(toastEl, {
         autohide: true,
         delay: 2000
+      });
+      toast.show();
+    }
+  }
+
+  toastMal(message: string) {
+    const toastEl = document.getElementById('errorToast');
+    const messageEl = document.getElementById('errorToastMsg');
+  
+    if (toastEl && messageEl) {
+      // Actualizar el mensaje del toast
+      messageEl.textContent = message;
+  
+      // Mostrar el toast
+      const toast = new Toast(toastEl, {
+        autohide: true,
+        delay: 3000
       });
       toast.show();
     }

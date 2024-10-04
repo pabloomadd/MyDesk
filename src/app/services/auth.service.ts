@@ -38,14 +38,28 @@ export class AuthService {
     return createUserWithEmailAndPassword(this.auth, credential.email, credential.password)
       .then((userCredential: UserCredential) => {
         console.log('Usuario Creado');
-        return userCredential; // Devuelve el objeto UserCredential
+        return userCredential; 
       })
       .catch((error) => {
+        
+        const errorCode = error.code;
+        const errorMsg = error.message;
         console.log('Error al Registrarse');
-        console.log('Código de Error: ', error.code);
-        console.log('Mensaje de Error: ', error.message);
+        console.log('Código de Error: ', errorCode);
+        console.log('Mensaje de Error: ', errorMsg);
+
+        if (errorCode === 'auth/email-already-in-use'){
+          console.log("Usuario en Uso");
+        }
         throw error; // Lanza el error para manejarlo en la llamada de la función
       });
+  }
+
+  async checkUsernameExists(username: string): Promise<boolean> {
+    const q = query(collection(this.db, 'users'), where('username', '==', username));
+    const querySnapshot = await getDocs(q);
+
+    return !querySnapshot.empty; // Retorna true si ya existe un usuario con ese username
   }
 
   logInEmailNPass(credential: Credential): Promise<void> {
