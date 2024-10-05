@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { WeatherService } from '../../services/weather.service';
 import { IWeather } from '../../../models/weather.model';
 import { AuthService } from '../../services/auth.service';
+import { Toast } from 'bootstrap';
 
 @Component({
   selector: 'app-home',
@@ -216,7 +217,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   logOut() {
     this._apiAuth.logOut();
-
+    this.outToast();
     setTimeout(() => {
       this._router.navigate(['login'])
     }, 1500);
@@ -249,6 +250,18 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
       );
     });
+  }
+
+  outToast() {
+    const toastEl = document.getElementById('outToast');
+    
+    if (toastEl) {
+      const toast = new Toast(toastEl, {
+        autohide: true,
+        delay: 2000
+      });
+      toast.show();
+    }
   }
 }
 

@@ -1,4 +1,6 @@
 <div class="container text-light text-center pt-5 pb-5">
+
+
     <div class="row">
 
         <div class="col-2">
@@ -12,7 +14,7 @@
             <div class="pt-4">
                 <p>{{nombre}}</p>
                 @if (vocacion) {
-                    <p class="bg-info bg-opacity-50 border border-info rounded">{{vocacion}}</p>
+                <p class="bg-info bg-opacity-50 border border-info rounded">{{vocacion}}</p>
                 }
             </div>
 
@@ -21,6 +23,7 @@
                 <button type="button" class="btn prim-btn text-white" routerLink="/ajustes">Ajustes</button>
                 <button type="button" class="btn prim-btn text-white" (click)="getUID()">User ID</button>
                 <button type="button" class="btn prim-btn text-white" (click)="getData()">User Name</button>
+                <button type="button" class="btn prim-btn text-white" (click)="outToast()">Toast Out</button>
             </div>
             <div class="btn-group-vertical d-inline rounded" role="group">
                 <button type="button" class="btn btn-danger text-white my-3" (click)="logOut()">Cerrar Sesión</button>
@@ -39,13 +42,23 @@
                         <textarea rows="5" class="form-control" placeholder="Descripción de la Nota"
                             formControlName="descrip"></textarea>
                         @if (creating) {
-                        <button class="btn btn-success m-2" type="submit">Crear Nota</button>
+                        <button class="btn btn-success m-2" type="submit" [disabled]="!noteForm.valid">Crear
+                            Nota</button>
                         }@else if(!creating) {
-                        <button class="btn btn-warning m-2" type="submit">Editar Nota</button>
+                        <button class="btn btn-warning m-2" type="submit" [disabled]="!noteForm.valid">Editar
+                            Nota</button>
                         <button class="btn btn-danger m-2" (click)="cancelEditBtn()">Cancelar Edición</button>
                         }
 
                     </form>
+
+                    <div class="toast-container position-fixed top-0">
+                        <div id="outToast" class="toast" role="alert">
+                            <div class="toast-body text-bg-danger">
+                                <strong>Cerrando Sesión</strong>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
                 <hr>
@@ -73,11 +86,10 @@
                     </div>
                     }
 
-
-
                 </div>
 
             </div>
+
         </div>
 
         @if (configReloj || configClima) {
@@ -147,4 +159,5 @@
         }
 
     </div>
+
 </div>
