@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { AppConfig } from '../../../models/config.model';
@@ -15,15 +15,24 @@ import { Data } from '../../../models/userdata,model';
 })
 export class PerfilComponent implements OnInit {
 
-  userForm!: FormGroup;
+
   private _apiAuth = inject(AuthService);
+  userForm!: FormGroup;
+  passForm!: FormGroup;
 
   nombre?: string;
   vocacion?: string;
   usuario?: string;
   correo?: string;
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder) {
+
+    this.passForm = this.formBuilder.group({
+      actualPass: ['', [Validators.required, Validators.minLength(6)]],
+      nuevaPass: ['', [Validators.required, Validators.minLength(6)]],
+
+    })
+  }
 
   ngOnInit(): void {
     this.getData();
@@ -54,6 +63,25 @@ export class PerfilComponent implements OnInit {
         console.error('Error al Obtener Datos: ', error);
       }
     );
+  }
+
+  // Función para cambiar la contraseña
+  async cambiarPass() {
+    if (this.passForm.valid) {
+      const passActual = this.passForm.value.actualPass;
+      const newPass = this.passForm.value.nuevaPass;
+
+      try {
+
+        await this._apiAuth.reautenticarUsuario(passActual);
+
+        await this._apiAuth.cambiarContraseña(newPass);
+        console.log('Contraseña cambiada exitosamente');
+
+      } catch (error) {
+        console.error('Error al cambiar la contraseña:', error);
+      }
+    }
   }
 
   async guardarAjustes() {

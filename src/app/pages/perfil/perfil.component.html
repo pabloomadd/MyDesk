@@ -35,8 +35,46 @@
                 </div>
 
                 <div class="m-4">
-                    <label for="validationCustom05" class="form-label">Contraseña</label>
-                    <input type="text" class="form-control">
+                    <!-- Button Trigger modal -->
+                    <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                        data-bs-target="#passwordModal">
+                        Cambio de Contraseña
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="passwordModal" #passwordModal tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title text-white fs-5" id="exampleModalLabel">Cambio de Contraseña
+                                    </h1>
+                                </div>
+                                <div class="modal-body">
+                                    <form [formGroup]="passForm" (ngSubmit)="cambiarPass()">
+                                        <div class="m-5">
+                                            <label for="actualPass" class="form-label">Contraseña Actual</label>
+                                            <input type="text" id="actualPass" class="form-control"
+                                                placeholder="Ingrese Contraseña Actual" formControlName="actualPass">
+                                        </div>
+
+                                        <div class="m-5">
+                                            <label for="nuevaPass" class="form-label">Nueva Contraseña</label>
+                                            <input type="text" id="nuevaPass" class="form-control"
+                                                placeholder="Nueva Contraseña" formControlName="nuevaPass">
+                                        </div>
+
+                                        <button type="submit" class="btn btn-success"
+                                            [disabled]="!passForm.valid">Guardar</button>
+                                    </form>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger"
+                                        data-bs-dismiss="modal">Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
                 <div>

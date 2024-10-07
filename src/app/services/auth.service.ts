@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
-import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, User, UserCredential } from 'firebase/auth';
+import { createUserWithEmailAndPassword, EmailAuthProvider, getAuth, onAuthStateChanged, reauthenticateWithCredential, signInWithEmailAndPassword, updatePassword, User, UserCredential } from 'firebase/auth';
 import { addDoc, collection, getFirestore, onSnapshot, deleteDoc, doc, getDoc, updateDoc, query, where, getDocs } from "firebase/firestore";
 import { environment } from '../../environments/environment.development';
 import { Credential } from '../../models/login.model';
@@ -38,17 +38,17 @@ export class AuthService {
     return createUserWithEmailAndPassword(this.auth, credential.email, credential.password)
       .then((userCredential: UserCredential) => {
         console.log('Usuario Creado');
-        return userCredential; 
+        return userCredential;
       })
       .catch((error) => {
-        
+
         const errorCode = error.code;
         const errorMsg = error.message;
         console.log('Error al Registrarse');
         console.log('Código de Error: ', errorCode);
         console.log('Mensaje de Error: ', errorMsg);
 
-        if (errorCode === 'auth/email-already-in-use'){
+        if (errorCode === 'auth/email-already-in-use') {
           console.log("Usuario en Uso");
         }
         throw error; // Lanza el error para manejarlo en la llamada de la función
@@ -65,23 +65,54 @@ export class AuthService {
   logInEmailNPass(credential: Credential): Promise<void> {
     return signInWithEmailAndPassword(this.auth, credential.email, credential.password)
       .then((userCredential) => {
-        
+
         const user = userCredential.user;
         console.log('Usuario autenticado:', user);
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMsg = error.message;
-  
+
         if (errorCode === 'auth/user-not-found' || errorCode === 'auth/wrong-password') {
           console.error('Error: Contraseña Incorrecta.');
         } else {
-          
+
           console.error('Error al loguearse:', errorMsg);
         }
-  
+
         throw error;
       });
+  }
+
+  async reautenticarUsuario(passwordActual: string): Promise<void> {
+    const user = this.auth.currentUser;
+    if (user && user.email) {
+      const credential = EmailAuthProvider.credential(user.email, passwordActual);
+      try {
+        await reauthenticateWithCredential(user, credential);
+        console.log('Reautenticación exitosa');
+      } catch (error) {
+        console.error('Error en la reautenticación:', error);
+        throw error;
+      }
+    } else {
+      throw new Error('No hay usuario autenticado');
+    }
+  }
+
+  async cambiarContraseña(nuevaPassword: string): Promise<void> {
+    const user = this.auth.currentUser;
+    if (user) {
+      try {
+        await updatePassword(user, nuevaPassword);
+        console.log('Contraseña actualizada con éxito');
+      } catch (error) {
+        console.error('Error al cambiar la contraseña:', error);
+        throw error;
+      }
+    } else {
+      throw new Error('No hay usuario autenticado');
+    }
   }
 
   logOut() {

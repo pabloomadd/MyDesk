@@ -1,4 +1,4 @@
-.card-settings{
+.card-settings {
     max-width: 30vw;
     background: #9F9CAC;
 }
@@ -7,6 +7,6 @@ label {
     color: white;
 }
 
-
-
-
+.modal-content {
+    background: var(--nav-color);
+}

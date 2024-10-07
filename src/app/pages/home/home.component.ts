@@ -254,7 +254,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   outToast() {
     const toastEl = document.getElementById('outToast');
-    
+
     if (toastEl) {
       const toast = new Toast(toastEl, {
         autohide: true,
