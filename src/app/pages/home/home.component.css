@@ -131,3 +131,7 @@ body {
 textarea {
     resize: none;
 }
+
+.modal-content {
+    background: var(--nav-color);
+}

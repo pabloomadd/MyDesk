@@ -70,10 +70,37 @@
                     <div class="card border-3 shadow m-2 p-3">
                         <h4>{{note.titulo}}</h4>
                         <p>{{note.descripcion}}</p>
-                        <p></p>
+
                         <div>
                             <button class="btn btn-warning m-1" (click)="editNoteBtn(note.id)">Editar</button>
-                            <button class="btn btn-danger m-1" (click)="deleteNote(note.id)">Borrar</button>
+                            <!-- Button Trigger modal -->
+                            <button type="button" class="btn btn-danger m-1" data-bs-toggle="modal"
+                                [attr.data-bs-target]="'#deleteModal' + note.id">
+                                Borrar
+                            </button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" [id]="'deleteModal' + note.id" tabindex="-1">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title text-white fs-5" id="exampleModalLabel">Borrar Nota
+                                            </h1>
+                                        </div>
+                                        <div class="modal-body">
+                                            <strong class="text-white">¿Seguro que quieres borrar la Nota
+                                                "{{note.titulo}}"?</strong>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-success m-2"
+                                                (click)="deleteNote(note.id)" data-bs-dismiss="modal">Borrar
+                                                Nota</button>
+                                            <button type="button" class="btn btn-danger m-2"
+                                                data-bs-dismiss="modal">Cancelar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     }

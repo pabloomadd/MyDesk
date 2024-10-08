@@ -127,7 +127,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     // Crear Nota
     if (this.creating) {
       this._apiAuth.newNote(noteData.title, noteData.descrip);
-
+      this.cancelEditBtn();
       // Editar Nota
     } else {
 
@@ -167,7 +167,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   async deleteNote(id: string) {
-    // Agregar Confirmacion de Borrado
     this._apiAuth.delNote(id);
   }
 
