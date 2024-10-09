@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -9,16 +9,18 @@ import { RouterLink, RouterOutlet } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit{
-  
+export class AppComponent implements OnInit {
+
   fecha = new Date();
   annio?: number;
-  
-  ngOnInit(): void {  
+
+  constructor(public router: Router){}
+
+  ngOnInit(): void {
     this.getCurrentYear();
   }
 
-  getCurrentYear(){
-    this.annio = this.fecha.getFullYear()  
+  getCurrentYear() {
+    this.annio = this.fecha.getFullYear()
   }
 }

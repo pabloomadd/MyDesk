@@ -48,8 +48,10 @@ body {
 /* WIDGET RELOJ */
 .clock {
     display: flex;
-    height: 200px;
-    width: 200px;
+    aspect-ratio: 1;
+    width: 100%;
+    max-width: clamp(150px, 10vw, 200px);
+    max-height: clamp(150px, 10vw, 200px);
     border-radius: 50%;
     align-items: center;
     justify-content: center;
@@ -60,22 +62,22 @@ body {
 
 .clock label {
     position: absolute;
-    inset: 10px;
+    inset: 5%;
     text-align: center;
     transform: rotate(calc(var(--i) * (360deg/12)));
 }
 
 .clock label span {
     display: inline-block;
-    font-size: 15px;
-    font-weight: 500;
+    font-size: clamp(15px, 1.5vw, 20px);
+    font-weight: 400;
     transform: rotate(calc(var(--i) * (-360deg/12)));
 }
 
 .indicator {
     position: absolute;
-    height: 12px;
-    width: 12px;
+    height: 8%;
+    width: 8%;
     display: flex;
     justify-content: center;
 }
@@ -87,36 +89,33 @@ body {
     width: 100%;
     border-radius: 50%;
     z-index: 100;
-    background: black;
-    border: 8px solid red
+    background: red;
 }
 
 .indicator .hand {
     position: absolute;
-    height: 65px;
-    width: 4px;
     bottom: 0;
     border-radius: 25px;
     transform-origin: 50% 100%;
-    background: red;
 }
 
 .indicator .hand.second {
-    height: 65px;
-    width: 4px;
+    height: clamp(50px, 3.5vw, 50vw);
+    width: 20%;
     transform-origin: 50% 95%;
+    background: red;
 }
 
 .indicator .hand.minute {
-    height: 58px;
-    width: 5px;
+    height: clamp(50px, 3.5vw, 50vw);
+    width: 20%;
     transform-origin: 50% 95%;
     background: gray;
 }
 
 .indicator .hand.hour {
-    height: 45px;
-    width: 6px;
+    height: clamp(35px, 2.5vw, 30vw);
+    width: 20%;
     transform-origin: 50% 89%;
     background: black;
 }
