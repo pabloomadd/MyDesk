@@ -1,82 +1,90 @@
 <div class="container text-center pt-5">
 
-    <!-- Mensaje para Validaciones -->
+    <div class="row justify-content-center">
+        <div class="col-7 col-lg-5">
+            <div class="card mx-auto">
+                <h2 class="mt-4">Registro de Usuario</h2>
+                <form class="mt-4 mx-auto m-5" [formGroup]="registerForm" (submit)="registro()">
 
-    <div class="card p-3 mx-auto align-items-center">
-        <h2 class="p-4">Registro de Usuario</h2>
-        <form class="m-2" [formGroup]="registerForm" (submit)="registro()">
+                    <div class="p-2">
+                        <label class="form-label">Nombre</label>
+                        <input
+                            [ngClass]="{'is-invalid': hasErrors('name', 'required') || hasErrors('name', 'minlength')}"
+                            type="text" class="form-control" formControlName="name">
+                        @if(hasErrors('name','required')){
+                        <div class="text-danger">Nombre es requerido</div>
+                        }
+                        @if(hasErrors('name','minlength')){
+                        <div class="text-danger">Nombre debe tener al <br> menos 6 carácteres</div>
+                        }
 
-            <div class="m-4">
-                <label class="form-label">Nombre</label>
-                <input [ngClass]="{'is-invalid': hasErrors('name', 'required') || hasErrors('name', 'minlength')}"
-                    type="text" class="form-control" formControlName="name">
-                @if(hasErrors('name','required')){
-                <div class="text-danger">Nombre es requerido</div>
-                }
-                @if(hasErrors('name','minlength')){
-                <div class="text-danger">Nombre debe tener al <br> menos 6 carácteres</div>
-                }
+                    </div>
 
-            </div>
+                    <div class="p-2">
+                        <label class="form-label">Nombre de Usuario</label>
+                        <input
+                            [ngClass]="{'is-invalid': hasErrors('username', 'required') || hasErrors('username', 'minlength')}"
+                            type="text" class="form-control" formControlName="username">
+                        @if(hasErrors('username','required')){
+                        <div class="text-danger">Nombre de Usuario es requerido</div>
+                        }
+                        @if(hasErrors('username','minlength')){
+                        <div class="text-danger">Nombre de Usuario debe tener al <br> menos 2 carácteres</div>
+                        }
+                    </div>
 
-            <div class="m-4">
-                <label class="form-label">Nombre de Usuario</label>
-                <input
-                    [ngClass]="{'is-invalid': hasErrors('username', 'required') || hasErrors('username', 'minlength')}"
-                    type="text" class="form-control" formControlName="username">
-                @if(hasErrors('username','required')){
-                <div class="text-danger">Nombre de Usuario es requerido</div>
-                }
-                @if(hasErrors('username','minlength')){
-                <div class="text-danger">Nombre de Usuario debe tener al <br> menos 2 carácteres</div>
-                }
-            </div>
+                    <div class="p-2">
+                        <label class="form-label">Correo Eléctronico</label>
+                        <input [ngClass]="{'is-invalid': hasErrors('email', 'required') || hasErrors('email', 'email')}"
+                            type="text" class="form-control" formControlName="email">
+                        @if(hasErrors('email','required')){
+                        <div class="text-danger">Correo Electrónico es requerido</div>
+                        }
+                        @if(hasErrors('email','email')){
+                        <div class="text-danger">Formato Inválido de Correo</div>
+                        <p>(Por ej. "micorreo&#64;mail.com")</p>
+                        }
+                    </div>
 
-            <div class="m-4">
-                <label class="form-label">Correo Eléctronico</label>
-                <input [ngClass]="{'is-invalid': hasErrors('email', 'required') || hasErrors('email', 'email')}"
-                    type="text" class="form-control" formControlName="email">
-                @if(hasErrors('email','required')){
-                <div class="text-danger">Correo Electrónico es requerido</div>
-                }
-                @if(hasErrors('email','email')){
-                <div class="text-danger">Formato Inválido de Correo</div>
-                <p>(Por ej. "micorreo&#64;mail.com")</p>
-                }
-            </div>
+                    <div class="p-2">
+                        <label class="form-label">Contraseña</label>
+                        <input
+                            [ngClass]="{'is-invalid': hasErrors('pass', 'required') || hasErrors('pass', 'minlength')}"
+                            type="text" class="form-control" formControlName="pass">
+                        @if(hasErrors('pass','required')){
+                        <div class="text-danger">Contraseña es requerida</div>
+                        }
+                        @if(hasErrors('pass','minlength')){
+                        <div class="text-danger">Contraseña debe ser de al<br>menos 6 carácteres</div>
 
-            <div class="m-4">
-                <label class="form-label">Contraseña</label>
-                <input type="text" class="form-control" formControlName="pass">
-                @if(hasErrors('pass','required')){
-                <div class="text-danger">Contraseña es requerida</div>
-                }
-                @if(hasErrors('pass','minlength')){
-                <div class="text-danger">Contraseña debe ser de al<br>menos 6 carácteres</div>
+                        }
+                    </div>
+                    <div class="p-2">
+                        <button class="btn btn-primary" [disabled]="!registerForm.valid"
+                            type="submit">Registrarse</button>
+                        <!-- <button class="btn btn-dark" type="button" (click)="toastBien()">Toast</button>
+                        <button class="btn btn-dark" type="button" (click)="toastMal('hola')">ToastMal</button> -->
+                    </div>
+                    <br>
+                    <p>Ya tienes Cuenta? <a [routerLink]="['']">Ingresa</a></p>
+                </form>
 
-                }
-            </div>
-            <div>
-                <button class="btn btn-primary m-2" [disabled]="!registerForm.valid" type="submit">Registrarse</button>
-                <!-- <button class="btn btn-dark" type="button" (click)="toastBien()">Toast</button>
-                <button class="btn btn-dark" type="button" (click)="toastMal('hola')">ToastMal</button> -->
-            </div>
-            <br>
-            <p>Ya tienes Cuenta? <a [routerLink]="['']">Ingresa</a></p>
-        </form>
+                <div class="toast-container position-fixed top-0 p-3">
+                    <div id="liveToast" class="toast" role="alert">
+                        <div class="toast-body text-success-emphasis">
+                            <strong>Usuario Registrado con Éxito</strong>
+                        </div>
+                    </div>
 
-        <div class="toast-container position-fixed top-0 p-3">
-            <div id="liveToast" class="toast" role="alert">
-                <div class="toast-body text-success-emphasis">
-                    <strong>Usuario Registrado con Éxito</strong>
-                </div>
-            </div>
-
-            <div id="errorToast" class="toast" role="alert">
-                <div class="toast-body text-bg-danger">
-                    <strong id="errorToastMsg">Error</strong>
+                    <div id="errorToast" class="toast" role="alert">
+                        <div class="toast-body text-bg-danger">
+                            <strong id="errorToastMsg">Error</strong>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+
 </div>
