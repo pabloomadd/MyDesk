@@ -5,7 +5,7 @@ import { addDoc, collection, getFirestore, onSnapshot, deleteDoc, doc, getDoc, u
 import { environment } from '../../environments/environment.development';
 import { Credential } from '../../models/login.model';
 import { INote } from '../../models/note.model';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
