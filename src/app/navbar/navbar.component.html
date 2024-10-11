@@ -1,9 +1,39 @@
-<nav class="navbar">
-    <div>
-        <a class="navbar-brand p-2">
+<div class="d-flex flex-column text-center vh-100" id="navbar">
+    <nav class="nav flex-column p-3">
+        <a class="navbar-brand fs-2 text-light" routerLink="/home">
             <img src="https://cdn.dribbble.com/users/790846/screenshots/3576077/media/ec70d35d621c9a4b526b961cf946458f.gif"
-                alt="MyDesk Logo" width="80vw" height="60vh">
+                class="img-fluid" alt="Logo" width="70" height="50" />
             MyDesk
         </a>
-    </div>
-</nav>
+        <div>
+
+            <div class="mt-5">
+                <div>
+                    <img src="/assets/perfil.png" class="img-fluid" alt="" width="150px" height="150px">
+                </div>
+
+                <div class="pt-4">
+                    <p>{{nombre}}</p>
+                    @if (vocacion) {
+                    <p class="bg-info bg-opacity-50 border border-info rounded">
+                        {{vocacion}}
+                    </p>
+                    }
+                </div>
+            </div>
+
+            <div class="mt-5">
+                <div class="btn-group-vertical d-inline rounded" role="group">
+                    <button type="button" class="btn prim-btn" routerLink="/home">Mis Notas</button>
+                    <button type="button" class="btn prim-btn" routerLink="/perfil">Perfil</button>
+                    <button type="button" class="btn prim-btn" routerLink="/ajustes">Ajustes</button>
+                </div>
+
+                <div class="btn-group-vertical d-inline rounded" role="group">
+                    <button type="button" class="btn btn-danger text-white my-3" (click)="logOut()">Cerrar
+                        Sesión</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>

@@ -1,34 +1,11 @@
-<header>
+<div class="all">
     @if((showNav)){
     <app-navbar />
     }
 
-</header>
+    <body class="content">
+        <router-outlet />
+    </body>
 
-<body>
-    <router-outlet />
-</body>
-
-<footer>
-    <nav>
-        <div class="col-12 text-center pt-4">
-
-            <div class="text-white">
-                <p>Contáctanos: <br> mailmail.com</p>
-            </div>
-
-            <div>
-                <a class="navbar-brand fs-2 text-light" href="index.html">
-                    <img src="https://cdn.dribbble.com/users/790846/screenshots/3576077/media/ec70d35d621c9a4b526b961cf946458f.gif"
-                        alt="Logo" width="70" height="50" />
-                    MyDesk
-                </a>
-            </div>
-
-            <div class="pt-3 pb-3">
-                <h6>Copyright ©<span>{{annio}}</span> Todos los Derechos Reservados</h6>
-            </div>
-
-        </div>
-    </nav>
-</footer>
+    <app-footer />
+</div>

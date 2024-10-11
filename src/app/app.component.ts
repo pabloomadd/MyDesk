@@ -1,21 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
-import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from "./navbar/navbar.component";
-import { Observable } from 'rxjs';
 import { AuthService } from './services/auth.service';
+import { FooterComponent } from "./footer/footer.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, NavbarComponent],
+  imports: [CommonModule, RouterOutlet, RouterLink, NavbarComponent, FooterComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
-
-  fecha = new Date();
-  annio?: number;
 
   showNav: boolean = false;
 
@@ -26,10 +23,7 @@ export class AppComponent implements OnInit {
       this.showNav = !!user;
     })
 
-    this.getCurrentYear();
   }
 
-  getCurrentYear() {
-    this.annio = this.fecha.getFullYear()
-  }
+
 }

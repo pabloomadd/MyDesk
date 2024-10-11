@@ -1,0 +1,33 @@
+#navbar {
+    width: 300px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: #9F9CAC;
+    color: white;
+}
+
+.prim-btn {
+    background: var(--prim-btn-color);
+
+}
+
+.prim-btn:hover {
+    background: var(--prim-btn-h);
+
+}
+
+.btn{
+    color: white;
+}
+
+body {
+    --primary-color: #7B93B4;
+    --nav-color: #9F9CAC;
+    --prim-btn-color: #6A7D99;
+    --prim-btn-h: #5A6C84;
+    --sec-btn-color: #6A8AB9;
+    --sec-btn-h: #5681A4;
+    --tert-btn-color: #E09732;
+    --tert-btn-h: #C07F26;
+}

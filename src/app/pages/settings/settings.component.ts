@@ -32,8 +32,8 @@ export class SettingsComponent implements OnInit {
 
     //Inicializar settingsForm
     this.settingsForm = this.formBuilder.group({
-      wReloj: [this.configReloj],
-      wClima: [this.configClima],
+      wClock: [this.configReloj],
+      wWeather: [this.configClima],
       ciudad: [this.ciudad],
       pais: [this.pais]
     })
@@ -61,8 +61,8 @@ export class SettingsComponent implements OnInit {
         this.settingsForm.patchValue({
           ciudad: userData.ciudad,
           pais: userData.pais,
-          wClima: userData.wWeather,
-          wReloj: userData.wClock
+          wWeather: userData.wWeather,
+          wClock: userData.wClock
         });
       },
       (error) => {
