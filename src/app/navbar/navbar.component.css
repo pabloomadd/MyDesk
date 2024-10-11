@@ -1,26 +1,35 @@
 #navbar {
-    width: 300px;
     position: fixed;
     left: 0;
     top: 0;
-    background-color: #9F9CAC;
+    background-color: var(--nav-color);
     color: white;
+    height: 100%;
+
 }
+
 
 .prim-btn {
     background: var(--prim-btn-color);
+    color: white;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
 
 }
 
 .prim-btn:hover {
     background: var(--prim-btn-h);
-
 }
 
-.btn{
-    color: white;
+.icon {
+    width: 30px;
+    height: 30px;
 }
 
+/* Variables de color del body */
 body {
     --primary-color: #7B93B4;
     --nav-color: #9F9CAC;
