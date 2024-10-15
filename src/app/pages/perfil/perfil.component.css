@@ -10,3 +10,8 @@ label {
 .modal-content {
     background: var(--nav-color);
 }
+
+.selected-avatar {
+    border: 3px solid green;
+    opacity: 0.8;
+}

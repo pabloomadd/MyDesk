@@ -25,6 +25,11 @@ export class PerfilComponent implements OnInit {
   usuario?: string;
   correo?: string;
 
+  imageUrls: string[] = []; // Array para almacenar las URLs de las imágenes
+  selectedAvatar: string | null = null; // Guardar la URL del avatar seleccionado, comienza en null
+  userId: string = ''; // Aquí irá el ID del usuario logueado
+  avatarImg?: string;
+
   constructor(private formBuilder: FormBuilder) {
 
     this.passForm = this.formBuilder.group({
@@ -36,6 +41,9 @@ export class PerfilComponent implements OnInit {
 
   ngOnInit(): void {
     this.getData();
+
+    this.userId = this._apiAuth.getCurrentUID() || ''; // Obtener el ID del usuario autenticado
+    console.log("ID: ", this.userId)
 
     //Inicializar settingsForm
     this.userForm = this.formBuilder.group({
@@ -51,7 +59,9 @@ export class PerfilComponent implements OnInit {
       (userData) => {
         console.log('Datos Obtenidos: ', userData);
 
-        // Actualizar los valores del formulario con patchValue
+        this.avatarImg = userData.avatar;
+        console.log("Avatar Obtenido: ", this.avatarImg)
+
         this.userForm.patchValue({
           name: userData.name,
           vocacion: userData.vocacion,
@@ -65,7 +75,6 @@ export class PerfilComponent implements OnInit {
     );
   }
 
-  // Función para cambiar la contraseña
   async cambiarPass() {
     if (this.passForm.valid) {
       const passActual = this.passForm.value.actualPass;
@@ -89,10 +98,35 @@ export class PerfilComponent implements OnInit {
       const updatedConfig: Data = this.userForm.value;
       console.log(updatedConfig);
 
-      // Actualizar en Firestore
       await this._apiAuth.editUserDocument(updatedConfig);
 
       alert("Ajustes Guardados");
+    }
+  }
+
+  getAvs() {
+    this._apiAuth.listImages().then((urls) => {
+      this.imageUrls = urls;
+      console.log("URLs de imágenes:", this.imageUrls);
+    }).catch((error) => {
+      console.error("Error al obtener las imágenes: ", error);
+    });
+  }
+
+  selectAvatar(url: string) {
+    this.selectedAvatar = url;
+    console.log("Avatar seleccionado:", url);
+  }
+
+  saveAvatar() {
+    if (this.selectedAvatar) {
+      this._apiAuth.saveAvatar(this.selectedAvatar)
+        .then(() => {
+          console.log('Avatar guardado correctamente');
+        })
+        .catch((error) => {
+          console.error('Error al guardar el avatar:', error);
+        });
     }
   }
 }

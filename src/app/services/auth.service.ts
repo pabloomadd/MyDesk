@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
 import { createUserWithEmailAndPassword, EmailAuthProvider, getAuth, onAuthStateChanged, reauthenticateWithCredential, signInWithEmailAndPassword, updatePassword, User, UserCredential } from 'firebase/auth';
 import { addDoc, collection, getFirestore, onSnapshot, deleteDoc, doc, getDoc, updateDoc, query, where, getDocs } from "firebase/firestore";
+import { getDownloadURL, getStorage, listAll, ref } from "firebase/storage";
 import { environment } from '../../environments/environment.development';
 import { Credential } from '../../models/login.model';
 import { INote } from '../../models/note.model';
@@ -17,6 +18,7 @@ export class AuthService {
   app = initializeApp(this.firebaseConfig);
   auth = getAuth(this.app);
   db = getFirestore(this.app);
+  storage = getStorage(this.app, environment.storageBucket);
 
   ///AUTH
 
@@ -34,7 +36,6 @@ export class AuthService {
   })
 
   crearUsuarioEmailNPass(credential: Credential): Promise<UserCredential> {
-    // Devuelve la promesa para cumplir con el tipo declarado
     return createUserWithEmailAndPassword(this.auth, credential.email, credential.password)
       .then((userCredential: UserCredential) => {
         console.log('Usuario Creado');
@@ -51,7 +52,7 @@ export class AuthService {
         if (errorCode === 'auth/email-already-in-use') {
           console.log("Usuario en Uso");
         }
-        throw error; // Lanza el error para manejarlo en la llamada de la función
+        throw error;
       });
   }
 
@@ -150,60 +151,50 @@ export class AuthService {
 
   getUserDocument(): Observable<any> {
     return new Observable((observer) => {
-      // Obtener el UID del usuario actual
+
       const uid = this.getCurrentUID();
 
-      // Verificar si se obtuvo el UID
       if (!uid) {
         observer.error('No se pudo obtener el UID del usuario');
         return;
       }
 
-      // Referencia a la colección 'users' con filtro por UID
       const userCollection = query(collection(this.db, 'users'), where('userid', '==', uid));
 
-      // Escuchar cambios en tiempo real con onSnapshot
       const unsubscribe = onSnapshot(userCollection, (querySnapshot) => {
         if (!querySnapshot.empty) {
-          // Emitir el primer documento encontrado, asumiendo que hay solo uno por UID
           const userDoc = querySnapshot.docs[0];
-          observer.next(userDoc.data()); // Emitir los datos del usuario
+          observer.next(userDoc.data());
         } else {
           observer.error('El documento del usuario no existe');
         }
       }, (error) => {
-        observer.error(error); // Manejar cualquier error
+        observer.error(error);
       });
 
-      // Retorna la función de limpieza cuando el observable se complete
       return () => unsubscribe();
     });
   }
 
   async editUserDocument(updatedData: any): Promise<void> {
-    // Obtener el UID del usuario actual
+
     const uid = this.getCurrentUID();
 
-    // Verificar si se obtuvo el UID
     if (!uid) {
       throw new Error('No se pudo obtener el UID del usuario');
     }
 
     try {
-      // Referencia al documento del usuario en la colección 'users' filtrado por el UID
-      const userCollection = query(
-        collection(this.db, 'users'),
-        where('userid', '==', uid)
+      const userCollection = query(collection(this.db, 'users'), where('userid', '==', uid)
       );
 
-      // Obtener el documento con el UID
+
       const querySnapshot = await getDocs(userCollection);
 
       if (!querySnapshot.empty) {
-        // Asumimos que solo hay un documento por UID, obtener el primer documento
+
         const userDoc = querySnapshot.docs[0];
 
-        // Actualizar el documento con los nuevos datos
         const userDocRef = doc(this.db, 'users', userDoc.id);
         await updateDoc(userDocRef, updatedData);
 
@@ -233,47 +224,43 @@ export class AuthService {
         return;
       }
 
-      // Filtra las notas por el campo 'uid'
       const notesCollection = query(collection(this.db, 'notes'), where('uid', '==', uid));
 
       // Escucha en tiempo real con onSnapshot
       const unsubscribe = onSnapshot(notesCollection, (querySnapshot) => {
-        notes.length = 0; // Limpiar el array para evitar duplicados
+        notes.length = 0;
 
         querySnapshot.forEach((doc) => {
           const data = doc.data();
           const note: INote = {
-            id: doc.id, // Usa doc.id como identificador
+            id: doc.id,
             titulo: data['titulo'],
             descripcion: data['descripcion']
           };
           notes.push(note);
         });
 
-        observer.next(notes); // Emite los cambios a los observadores
+        observer.next(notes);
       }, (error) => {
-        observer.error(error); // Maneja el error
+        observer.error(error);
       });
 
-      // Retorna la función de limpieza cuando el observable se complete
       return () => unsubscribe();
     });
   }
 
   async newNote(title: string, descrip: string) {
     try {
-      // Obtener el UID del usuario actual
       const uid = this.getCurrentUID();
 
       if (!uid) {
         throw new Error('No se pudo obtener el UID del usuario');
       }
 
-      // Agregar la nota a la colección con el UID
       const docRef = await addDoc(collection(this.db, "notes"), {
         titulo: title,
         descripcion: descrip,
-        uid: uid // Añadir el UID del usuario a la nota
+        uid: uid
       });
 
       console.log("Document written with ID: ", docRef.id);
@@ -306,6 +293,49 @@ export class AuthService {
     await deleteDoc(doc(this.db, "notes", id));
   }
 
+  //STORAGE
 
+  listImages(): Promise<string[]> {
+    const listRef = ref(this.storage, 'avs');
 
+    return listAll(listRef).then((res) => {
+      const urls: string[] = [];
+      const promises = res.items.map((itemRef) => {
+        return getDownloadURL(itemRef).then((url) => {
+          urls.push(url);
+        });
+      });
+      return Promise.all(promises).then(() => urls);
+    }).catch((error) => {
+      console.error("Error al obtener los archivos: ", error);
+      return [];
+    });
+  }
+
+  async saveAvatar(avatarUrl: string): Promise<void> {
+    const uid = this.getCurrentUID();
+
+    if (!uid) {
+      throw new Error('No se pudo obtener el UID del usuario');
+    }
+
+    try {
+      const userCollection = query(collection(this.db, 'users'), where('userid', '==', uid));
+      const querySnapshot = await getDocs(userCollection);
+
+      if (!querySnapshot.empty) {
+        const userDoc = querySnapshot.docs[0];
+        const userDocRef = doc(this.db, 'users', userDoc.id);
+
+        await updateDoc(userDocRef, { avatar: avatarUrl });
+
+        console.log('Avatar actualizado exitosamente');
+      } else {
+        throw new Error('No se encontró el documento del usuario');
+      }
+    } catch (error) {
+      console.error('Error al actualizar el avatar:', error);
+      throw error;
+    }
+  }
 }

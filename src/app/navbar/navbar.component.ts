@@ -19,6 +19,8 @@ export class NavbarComponent implements OnInit {
   nombre?: string;
   vocacion?: string;
 
+  avatarImg?: string;
+
   ngOnInit() {
     this.getData();
   }
@@ -28,7 +30,7 @@ export class NavbarComponent implements OnInit {
       this._apiAuth.getUserDocument().subscribe(
         (userData) => {
           console.log('Datos Obtenidos: ', userData);
-
+          this.avatarImg = userData.avatar;
           this.nombre = userData.name;
           this.vocacion = userData.vocacion
 

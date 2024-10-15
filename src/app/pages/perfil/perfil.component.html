@@ -4,12 +4,50 @@
     <div class="container p-5">
 
         <div class="card card-settings mx-auto align-items-center">
-            <form class="m-2" [formGroup]="userForm" (submit)="guardarAjustes()">
-                <div class="m-4">
-                    <img src="assets/perfil.png" alt="Foto Perfil">
-                    <br>
-                    <button class="btn btn-warning m-2">Cambiar Foto</button>
+
+            <div class="m-4">
+                <img src={{avatarImg}}>
+            </div>
+
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                (click)="getAvs()">
+                Cambiar Foto
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title text-white fs-5" id="staticBackdropLabel">Seleccione un Avatar:</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="card">
+                                <div class="row">
+                                    <div class="col-md-3" *ngFor="let url of imageUrls">
+                                        <img [src]="url" alt="Imagen de avatar" class="img-fluid rounded-circle"
+                                            (click)="selectAvatar(url)"
+                                            [class.selected-avatar]="selectedAvatar === url">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button class="btn btn-success mt-3" data-bs-dismiss="modal"
+                                    (click)="saveAvatar()">Guardar Avatar</button>
+                                <button class="btn btn-danger mt-3" data-bs-dismiss="modal">Cancelar</button>
+
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
+            </div>
+
+            <form class="m-2" [formGroup]="userForm" (submit)="guardarAjustes()">
                 <div class="m-4">
                     <label class="form-label">Nombre/s</label>
                     <input type="text" class="form-control" formControlName="name">
