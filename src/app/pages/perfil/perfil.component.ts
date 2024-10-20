@@ -32,6 +32,13 @@ export class PerfilComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder) {
 
+    this.userForm = this.formBuilder.group({
+      name: [this.nombre || '', Validators.required],
+      vocacion: [this.vocacion || '', Validators.required],
+      username: [this.usuario || '', Validators.required],
+      email: [this.correo || [Validators.required, Validators.email]]
+    });
+
     this.passForm = this.formBuilder.group({
       actualPass: ['', [Validators.required, Validators.minLength(6)]],
       nuevaPass: ['', [Validators.required, Validators.minLength(6)]],
@@ -42,16 +49,6 @@ export class PerfilComponent implements OnInit {
   ngOnInit(): void {
     this.getData();
 
-    this.userId = this._apiAuth.getCurrentUID() || ''; // Obtener el ID del usuario autenticado
-    console.log("ID: ", this.userId)
-
-    //Inicializar settingsForm
-    this.userForm = this.formBuilder.group({
-      name: [this.nombre],
-      vocacion: [this.vocacion],
-      username: [this.usuario],
-      email: [this.correo]
-    })
   }
 
   getData() {
@@ -60,7 +57,10 @@ export class PerfilComponent implements OnInit {
         console.log('Datos Obtenidos: ', userData);
 
         this.avatarImg = userData.avatar;
-        console.log("Avatar Obtenido: ", this.avatarImg)
+        this.nombre = userData.name;
+        this.vocacion = userData.vocacion;
+        this.usuario = userData.username;
+        this.correo = userData.email;
 
         this.userForm.patchValue({
           name: userData.name,
@@ -68,9 +68,27 @@ export class PerfilComponent implements OnInit {
           username: userData.username,
           email: userData.email
         });
+
       },
       (error) => {
         console.error('Error al Obtener Datos: ', error);
+        const savedData = localStorage.getItem('userData');
+        if (savedData) {
+          const userData = JSON.parse(savedData);
+
+          this.userForm.patchValue({
+            name: userData.name || '',
+            vocacion: userData.vocacion || '',
+            username: userData.username || '',
+            email: userData.email || ''
+          });
+
+          this.avatarImg = userData.avatar
+          this.nombre = userData.name;
+          this.vocacion = userData.vocacion;
+          this.usuario = userData.username;
+          this.correo = userData.email;
+        }
       }
     );
   }
@@ -99,6 +117,23 @@ export class PerfilComponent implements OnInit {
       console.log(updatedConfig);
 
       await this._apiAuth.editUserDocument(updatedConfig);
+
+      const existingData = localStorage.getItem('userData');
+      if (existingData) {
+        const userData = JSON.parse(existingData);
+
+        if (updatedConfig.name) {
+          userData.nombre = updatedConfig.name;
+        }
+        if (updatedConfig.vocacion) {
+          userData.vocacion = updatedConfig.vocacion;
+        }
+        if (updatedConfig.email) {
+          userData.correo = updatedConfig.email;
+        }
+
+        localStorage.setItem('userData', JSON.stringify(userData));
+      }
 
       alert("Ajustes Guardados");
     }

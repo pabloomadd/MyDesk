@@ -1,4 +1,4 @@
-<div class="container text-light text-center pt-5 pb-5" style="margin-left: 25%;">
+<div class="container text-light text-center pt-5 pb-5" style="margin-left: 22%;">
 
     <div class="row">
 
@@ -129,6 +129,9 @@
             @if (configClima){
             <div class="card main-card m-3 pt-3 pb-1 text-white text-center">
                 <h5>Clima</h5>
+                @if(configCiudad == '' || configPais == ''){
+                <p class=" m-2 p-3 text-white fs-6">*Para ver el Clima es necesario asignar una Ciudad y un País en Ajustes</p>
+                }@else{
                 @if (!loadingWeath) {
                 <div class="card rounded-2 m-2 weather-background text-white">
                     <div class="m-3">
@@ -149,6 +152,9 @@
                     </div>
                 </div>
                 }
+                }
+
+
 
             </div>
             }

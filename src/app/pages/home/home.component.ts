@@ -7,6 +7,7 @@ import { WeatherService } from '../../services/weather.service';
 import { IWeather } from '../../../models/weather.model';
 import { AuthService } from '../../services/auth.service';
 import { Toast } from 'bootstrap';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-home',
@@ -25,6 +26,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   private intervalClima?: ReturnType<typeof setInterval>;
   private _apiWeather = inject(WeatherService);
   private _apiAuth = inject(AuthService);
+  private _apiUser = inject(UserService);
   private _router = inject(Router);
 
   //Variables
@@ -68,44 +70,39 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   //Mejorar Carga de Notas y de Clima
   ngOnInit(): void {
-    // Carga de Configuraciones
-    this.getData()
-      .then(() => {
-        // Carga de Clima
-        this.loadingWeath = true;
-        this.loadingNotes = true;
-        this.loadingClock = true;
+    this.getData().then(() => {
 
-        // Ejecuta getWeather después de que getData esté listo, usando valores predeterminados si configCiudad o configPais están undefined
-        this.getWeather(this.configCiudad || 'defaultCiudad', this.configPais || 'defaultPais');
+      this.loadingWeath = true;
+      this.loadingNotes = true;
+      this.loadingClock = true;
 
-        // Bucles que verifican si los widgets están activos antes de ejecutar
-        if (this.configReloj) {
-          this.intervalReloj = setInterval(() => {
-            const fecha = this.getTimeInTimeZone('America/Santiago');
-            this.updateTime(fecha);
-          }, 1000); // Actualización cada 1 segundo
-        }
+      this.getWeather(this.configCiudad || '', this.configPais || '');
 
-        if (this.configClima) {
-          this.intervalClima = setInterval(() => {
-            this.getWeather(this.configCiudad || 'defaultCiudad', this.configPais || 'defaultPais');
-          }, 600000); // Actualización cada 10 minutos
-        }
-      })
-      .catch((error: any) => {
-        console.error('Error al cargar los datos:', error);
-      });
-
-    // Obtener las notas
-    this._apiAuth.getNotes().subscribe({
-      next: (notes) => {
-        this.notesList = notes;
-        this.loadingNotes = false;
-      },
-      error: (error) => {
-        console.error('Error al obtener las notas: ', error);
+      if (this.configReloj) {
+        this.intervalReloj = setInterval(() => {
+          const fecha = this.getTimeInTimeZone('America/Santiago');
+          this.updateTime(fecha);
+        }, 1000); // Actualización cada 1 segundo
       }
+
+      if (this.configClima) {
+        this.intervalClima = setInterval(() => {
+          this.getWeather(this.configCiudad || 'defaultCiudad', this.configPais || 'defaultPais');
+        }, 600000); // Actualización cada 10 minutos
+      }
+
+      // Obtener las notas
+      this._apiAuth.getNotes().subscribe({
+        next: (notes) => {
+          this.notesList = notes;
+          this.loadingNotes = false;
+        },
+        error: (error) => {
+          console.error('Error al obtener las notas: ', error);
+        }
+      });
+    }).catch((error) => {
+      console.error(error);
     });
   }
 
@@ -233,19 +230,26 @@ export class HomeComponent implements OnInit, OnDestroy {
         (userData) => {
           console.log('Datos Obtenidos: ', userData);
 
-          this.nombre = userData.name;
-          this.vocacion = userData.vocacion
-          // Ajustar WClima para Ciudad y Pais Vacios
+          this.configReloj = userData.wClock;
+          this.configClima = userData.wWeather;
           this.configCiudad = userData.ciudad;
           this.configPais = userData.pais;
-          this.configClima = userData.wWeather;
-          this.configReloj = userData.wClock;
 
-          resolve(); // Datos cargados con éxito
+          resolve();
         },
         (error) => {
           console.error('Error al Obtener Datos: ', error);
-          reject(error); // Error al cargar los datos
+          const savedData = localStorage.getItem('userData');
+          if (savedData) {
+            const userData = JSON.parse(savedData);
+
+            this.configCiudad = userData.ciudad;
+            this.configPais = userData.pais;
+
+            resolve();
+          } else {
+            reject('No se pudieron obtener los datos ni del servidor ni del localStorage.');
+          }
         }
       );
     });
