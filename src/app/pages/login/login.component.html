@@ -41,19 +41,27 @@
                     <p>Aun no tienes Cuenta? <a [routerLink]="['/register']">Registrate</a></p>
                 </form>
 
-                <div class="toast-container text-center"></div>
-                <div id="liveToast" class="toast mx-auto" role="alert">
-                    <div class="toast-body text-bg-success">
-                        <strong>Logueando Usuario...</strong>
+
+                <div id="liveToast"
+                    class="toast align-items-center text-bg-success position-fixed top-0 start-50 translate-middle-x"
+                    role="alert">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <strong>Iniciando Sesión...</strong>
+                        </div>
                     </div>
                 </div>
 
-                <div class="toast-container"></div>
-                <div id="dangerToast" class="toast mx-auto" role="alert">
-                    <div class="toast-body text-bg-danger">
-                        <strong>Datos Incorrectos. Compruébalos!</strong>
+                <div id="dangerToast"
+                    class="toast align-items-center text-bg-danger position-fixed top-0 start-50 translate-middle-x"
+                    role="alert">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <strong>Datos Incorrectos. Compruébalos!</strong>
+                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>

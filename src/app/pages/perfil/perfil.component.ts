@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { AppConfig } from '../../../models/config.model';
 import { Data } from '../../../models/userdata,model';
+import { Toast } from 'bootstrap';
 
 @Component({
   selector: 'app-perfil',
@@ -25,10 +26,12 @@ export class PerfilComponent implements OnInit {
   usuario?: string;
   correo?: string;
 
-  imageUrls: string[] = []; // Array para almacenar las URLs de las imágenes
-  selectedAvatar: string | null = null; // Guardar la URL del avatar seleccionado, comienza en null
-  userId: string = ''; // Aquí irá el ID del usuario logueado
+  imageUrls: string[] = [];
+  selectedAvatar: string | null = null;
+  userId: string = '';
   avatarImg?: string;
+
+  saving?: boolean;
 
   constructor(private formBuilder: FormBuilder) {
 
@@ -48,49 +51,52 @@ export class PerfilComponent implements OnInit {
 
   ngOnInit(): void {
     this.getData();
-
+    this.saving = false;
   }
 
   getData() {
-    this._apiAuth.getUserDocument().subscribe(
-      (userData) => {
-        console.log('Datos Obtenidos: ', userData);
+    const savedData = localStorage.getItem('userData');
+    if (savedData) {
+      const userData = JSON.parse(savedData);
 
-        this.avatarImg = userData.avatar;
-        this.nombre = userData.name;
-        this.vocacion = userData.vocacion;
-        this.usuario = userData.username;
-        this.correo = userData.email;
+      this.userForm.patchValue({
+        name: userData.name || '',
+        vocacion: userData.vocacion || '',
+        username: userData.username || '',
+        email: userData.email || ''
+      });
 
-        this.userForm.patchValue({
-          name: userData.name,
-          vocacion: userData.vocacion,
-          username: userData.username,
-          email: userData.email
-        });
+      this.avatarImg = userData.avatar;
+      this.nombre = userData.name;
+      this.vocacion = userData.vocacion;
+      this.usuario = userData.username;
+      this.correo = userData.email;
+    } else {
+      this._apiAuth.getUserDocument().subscribe(
+        (userData) => {
+          console.log('Datos Obtenidos: ', userData);
 
-      },
-      (error) => {
-        console.error('Error al Obtener Datos: ', error);
-        const savedData = localStorage.getItem('userData');
-        if (savedData) {
-          const userData = JSON.parse(savedData);
-
-          this.userForm.patchValue({
-            name: userData.name || '',
-            vocacion: userData.vocacion || '',
-            username: userData.username || '',
-            email: userData.email || ''
-          });
-
-          this.avatarImg = userData.avatar
+          this.avatarImg = userData.avatar;
           this.nombre = userData.name;
           this.vocacion = userData.vocacion;
           this.usuario = userData.username;
           this.correo = userData.email;
+
+          this.userForm.patchValue({
+            name: userData.name,
+            vocacion: userData.vocacion,
+            username: userData.username,
+            email: userData.email
+          });
+
+          const { userid, ...userDataWithoutId } = userData;
+          localStorage.setItem('userData', JSON.stringify(userDataWithoutId));
+        },
+        (error) => {
+          console.error('Error al Obtener Datos: ', error);
         }
-      }
-    );
+      );
+    }
   }
 
   async cambiarPass() {
@@ -113,6 +119,8 @@ export class PerfilComponent implements OnInit {
 
   async guardarAjustes() {
     if (this.userForm.valid) {
+      this.saving = true;
+
       const updatedConfig: Data = this.userForm.value;
       console.log(updatedConfig);
 
@@ -135,7 +143,8 @@ export class PerfilComponent implements OnInit {
         localStorage.setItem('userData', JSON.stringify(userData));
       }
 
-      alert("Ajustes Guardados");
+      this.saving = false;
+      this.toastSave();
     }
   }
 
@@ -162,6 +171,19 @@ export class PerfilComponent implements OnInit {
         .catch((error) => {
           console.error('Error al guardar el avatar:', error);
         });
+    }
+  }
+
+  toastSave() {
+    const toastEl = document.getElementById('toastSave');
+
+    if (toastEl) {
+
+      const toast = new Toast(toastEl, {
+        autohide: true,
+        delay: 3000
+      });
+      toast.show();
     }
   }
 }

@@ -59,7 +59,7 @@
 
                 </div>
                 <div class="m-4">
-                    <label class="form-label" >Nombre de Usuario</label>
+                    <label class="form-label">Nombre de Usuario</label>
                     <div class="input-group has-validation">
                         <span class="input-group-text">&#64;</span>
                         <input type="text" class="form-control opacity-75" formControlName="username" readonly>
@@ -116,10 +116,24 @@
 
                 </div>
                 <div>
+                    @if (!saving) {
                     <button class="btn btn-primary m-2" type="submit">Guardar</button>
+                    }@else{
+                    <button class="btn btn-primary m-2" type="submit" disabled>Guardando...</button>
+                    }
                     <button class="btn btn-danger m-2" type="button" routerLink="/home">Salir</button>
                 </div>
             </form>
         </div>
     </div>
+
+    <div id="toastSave"
+        class="toast text-bg-success position-fixed top-0 start-50 translate-middle-x" role="alert">
+        <div class="d-flex">
+            <div class="toast-body">
+                <strong>Datos Guardados</strong>
+            </div>
+        </div>
+    </div>
+
 </div>

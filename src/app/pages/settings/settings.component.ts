@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AppConfig } from '../../../models/config.model';
 import { AuthService } from '../../services/auth.service';
+import { Toast } from 'bootstrap';
 
 @Component({
   selector: 'app-settings',
@@ -23,6 +24,8 @@ export class SettingsComponent implements OnInit {
   configClima?: boolean;
   configReloj?: boolean;
 
+  saving?: boolean;
+
 
   constructor(private formBuilder: FormBuilder) {
     this.settingsForm = this.formBuilder.group({
@@ -35,11 +38,14 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getData();
+    this.saving = false;
 
   }
 
   async guardarAjustes() {
     if (this.settingsForm.valid) {
+      this.saving = true;
+
       const updatedConfig: AppConfig = this.settingsForm.value;
       console.log(updatedConfig);
 
@@ -56,7 +62,7 @@ export class SettingsComponent implements OnInit {
           userData.wWeather = updatedConfig.wClima;
         }
         if (updatedConfig.ciudad) {
-          userData.cudad = updatedConfig.ciudad;
+          userData.ciudad = updatedConfig.ciudad;
         }
         if (updatedConfig.pais) {
           userData.pais = updatedConfig.pais;
@@ -65,34 +71,37 @@ export class SettingsComponent implements OnInit {
         localStorage.setItem('userData', JSON.stringify(userData));
       }
 
-      alert("Ajustes Guardados");
+      this.saving = false;
+      this.toastSave()
     }
   }
 
   getData() {
-    this._apiAuth.getUserDocument().subscribe(
-      (userData) => {
-        console.log('Datos Obtenidos: ', userData);
+    const savedData = localStorage.getItem('userData');
+    if (savedData) {
+      const userData = JSON.parse(savedData);
 
-        this.configReloj = userData.wClock;
-        this.configClima = userData.wWeather;
-        this.ciudad = userData.ciudad;
-        this.pais = userData.pais;
+      this.configReloj = userData.wClock;
+      this.configClima = userData.wWeather;
+      this.ciudad = userData.ciudad;
+      this.pais = userData.pais;
 
-        this.settingsForm.patchValue({
-          wClock: userData.wClock,
-          wWeather: userData.wWeather,
-          ciudad: userData.ciudad,
-          pais: userData.pais
-        });
+      this.settingsForm.patchValue({
+        wClock: userData.wClock,
+        wWeather: userData.wWeather,
+        ciudad: userData.ciudad,
+        pais: userData.pais
+      });
 
-      },
-      (error) => {
-        console.error('Error al Obtener Datos: ', error);
+    } else {
+      this._apiAuth.getUserDocument().subscribe(
+        (userData) => {
+          console.log('Datos Obtenidos: ', userData);
 
-        const savedData = localStorage.getItem('userData');
-        if (savedData) {
-          const userData = JSON.parse(savedData);
+          this.configReloj = userData.wClock;
+          this.configClima = userData.wWeather;
+          this.ciudad = userData.ciudad;
+          this.pais = userData.pais;
 
           this.settingsForm.patchValue({
             wClock: userData.wClock,
@@ -101,13 +110,27 @@ export class SettingsComponent implements OnInit {
             pais: userData.pais
           });
 
-          this.configReloj = userData.wClock;
-          this.configClima = userData.wWeather;
-          this.ciudad = userData.ciudad;
-          this.pais = userData.pais;
+          const { userid, ...userDataWithoutId } = userData;
+          localStorage.setItem('userData', JSON.stringify(userDataWithoutId));
+        },
+        (error) => {
+          console.error('Error al Obtener Datos: ', error);
         }
-      }
-    );
+      );
+    }
+  }
+
+  toastSave() {
+    const toastEl = document.getElementById('toastSave');
+
+    if (toastEl) {
+
+      const toast = new Toast(toastEl, {
+        autohide: true,
+        delay: 3000
+      });
+      toast.show();
+    }
   }
 
 }
