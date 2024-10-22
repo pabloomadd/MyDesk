@@ -1,93 +1,86 @@
-<div class="text-center">
+<div class="container text-center custom-margin">
 
-    <h1 class="text-white p-3 pb-3">Mis Ajustes</h1>
-    <div class="container p-5">
+    <div class="row">
+        <div class="col-11 col-sm-11 col-md-11 col-lg-9 col-xl-8">
+            <h1 class="text-white p-3 pb-3">Mis Ajustes</h1>
+            <div class="container p-5">
 
-        <div class="card card-settings mx-auto">
-            <!-- <div class="">
-                <h4 class="m-3 text-white">Personalización</h4>
-                <div class="form-floating m-4">
-                    <select class="form-select">
-                        <option value="dark">Oscuro</option>
-                        <option value="realDark">Real Dark</option>
-                        <option value="aqua">Aqua</option>
-                        <option value="amazona">Amazonas</option>
-                        <option value="coral">Coral</option>
-                    </select>
-                    <label for="floatingSelect">Elija un Tema</label>
+                <div class="card card-settings">
+                    <div class="m-3">
+                        <h4 class="text-white">Widgets</h4>
+                        <div class="row">
+                            <form [formGroup]="settingsForm" (submit)="guardarAjustes()">
+
+                                <div class="btn-group m-2">
+                                    <div class="m-2">
+                                        <input type="checkbox" class="btn-check" id="btncheck" formControlName="wClock">
+                                        <label class="btn btn-outline-warning " for="btncheck">
+                                            <span>Reloj</span>
+                                            <br>
+                                            <img src="assets/reloj.png" class="img-fluid"
+                                                style="min-height: 5px;min-width: 5px;">
+                                        </label>
+                                    </div>
+
+                                    <div class="m-2">
+                                        <input type="checkbox" class="btn-check" id="btncheck2"
+                                            formControlName="wWeather">
+                                        <label class="btn btn-outline-warning" for="btncheck2">
+                                            <span>Clima</span>
+                                            <br>
+                                            <img src="assets/clima.png" class="img-fluid"
+                                                style="min-height: 5px;min-width: 5px;">
+                                        </label>
+                                    </div>
+
+                                </div>
+                                <p class="text-white">*Los Widgets Iluminados son los Activos Actualmente</p>
+                                <br>
+                                <h4 class="text-white">Ajustes de Zona</h4>
+
+                                <div class="m-4">
+                                    <label class="form-label">Ciudad</label>
+                                    <input type="text" class="form-control" placeholder="Ingrese una Ciudad"
+                                        formControlName="ciudad">
+                                    <div class="valid-feedback">
+                                        Looks good!
+                                    </div>
+                                </div>
+
+                                <div class="m-4">
+                                    <label class="form-label">País</label>
+                                    <input type="text" class="form-control" placeholder="Ingrese un País"
+                                        formControlName="pais">
+                                    <div class="valid-feedback">
+                                        Looks good!
+                                    </div>
+                                </div>
+
+                                <p class="text-white">*La ciudad y el país se tomarán en cuenta para Widgets de Reloj y
+                                    Clima
+                                </p>
+
+                                @if (!saving) {
+                                <button class="btn btn-primary m-2" type="submit">Guardar</button>
+                                }@else{
+                                <button class="btn btn-primary m-2" type="submit" disabled>Guardando...</button>
+                                }
+
+                                <button class="btn btn-danger m-2" type="button" routerLink="/home">Salir</button>
+
+                            </form>
+                        </div>
+
+                    </div>
                 </div>
-                <p class="text-white">*El tema cambia la Apariencia Completa del Sitio</p>
-            </div> -->
-            <br>
-            <div class="m-1">
-                <h4 class="text-white">Widgets</h4>
-                <div class="row">
-                    <form [formGroup]="settingsForm" (submit)="guardarAjustes()">
-
-                        <div class="btn-group m-2">
-                            <div class="m-2">
-                                <input type="checkbox" class="btn-check" id="btncheck" formControlName="wClock">
-                                <label class="btn btn-outline-warning " for="btncheck">
-                                    <span>Reloj</span>
-                                    <br>
-                                    <img src="assets/reloj.png" alt="">
-                                </label>
-                            </div>
-
-                            <div class="m-2">
-                                <input type="checkbox" class="btn-check" id="btncheck2" formControlName="wWeather">
-                                <label class="btn btn-outline-warning" for="btncheck2">
-                                    <span>Clima</span>
-                                    <br>
-                                    <img src="assets/clima.png" alt="">
-                                </label>
-                            </div>
-
+                <div id="toastSave"
+                    class="toast align-items-center text-bg-success position-fixed top-0 start-50 translate-middle-x"
+                    role="alert">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <strong>Configuración Guardada</strong>
                         </div>
-                        <p class="text-white">*Los Widgets Iluminados son los Activos Actualmente</p>
-                        <br>
-                        <h4 class="text-white">Ajustes de Zona</h4>
-
-                        <div class="m-4">
-                            <label class="form-label">Ciudad</label>
-                            <input type="text" class="form-control" placeholder="Ingrese una Ciudad"
-                                formControlName="ciudad">
-                            <div class="valid-feedback">
-                                Looks good!
-                            </div>
-                        </div>
-
-                        <div class="m-4">
-                            <label class="form-label">País</label>
-                            <input type="text" class="form-control" placeholder="Ingrese un País"
-                                formControlName="pais">
-                            <div class="valid-feedback">
-                                Looks good!
-                            </div>
-                        </div>
-
-                        <p class="text-white">*La ciudad y el país se tomarán en cuenta para Widgets de Reloj y Clima
-                        </p>
-
-                        @if (!saving) {
-                        <button class="btn btn-primary m-2" type="submit">Guardar</button>
-                        }@else{
-                        <button class="btn btn-primary m-2" type="submit" disabled>Guardando...</button>
-                        }
-
-                        <button class="btn btn-danger m-2" type="button" routerLink="/home">Salir</button>
-
-                    </form>
-                </div>
-
-            </div>
-        </div>
-        <div id="toastSave"
-            class="toast align-items-center text-bg-success position-fixed top-0 start-50 translate-middle-x"
-            role="alert">
-            <div class="d-flex">
-                <div class="toast-body">
-                    <strong>Configuración Guardada</strong>
+                    </div>
                 </div>
             </div>
         </div>

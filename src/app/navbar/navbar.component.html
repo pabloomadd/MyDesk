@@ -2,13 +2,18 @@
     <nav class="nav flex-column p-3">
         <a class="navbar-brand fs-2 text-light" routerLink="/home">
             <img src="https://cdn.dribbble.com/users/790846/screenshots/3576077/media/ec70d35d621c9a4b526b961cf946458f.gif"
-                class="img-fluid" alt="Logo" width="50" height="30" />
+                class="img-fluid" alt="Logo" style="max-width: 50px;max-height: 30px;" />
             <span class="d-none d-md-block">MyDesk</span>
         </a>
         <div>
             <div class="mt-5 text-center">
                 <div>
+                    @if (avatarImg) {
                     <img src={{avatarImg}} class="img-fluid" alt="" style="max-width: 150; max-height:150px;">
+                    }@else{
+                    <img src="assets/nophoto.png" class="img-fluid" style="max-width: 150; max-height:150px;">
+                    }
+
                 </div>
 
                 <div class="pt-4 d-none d-sm-block">

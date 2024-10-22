@@ -1,5 +1,4 @@
 .card-settings {
-    max-width: 30vw;
     background: #9F9CAC;
 }
 
@@ -14,4 +13,36 @@ label {
 .selected-avatar {
     border: 3px solid green;
     opacity: 0.8;
+}
+
+@media (max-width: 575.98px) {
+    .custom-margin {
+        margin-left: 20%;
+        margin-right: 0;
+        max-width: 80%;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .custom-margin {
+        margin-left: 20%;
+        margin-right: 0;
+        max-width: 80%;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .custom-margin {
+        margin-left: 30%;
+        margin-right: 0;
+        max-width: 70%;
+    }
+}
+
+@media (min-width: 992px) {
+    .custom-margin {
+        margin-left: 35%;
+        margin-right: 0;
+        max-width: 65%;
+    }
 }

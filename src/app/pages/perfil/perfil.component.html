@@ -1,139 +1,152 @@
-<div class="text-center">
+<div class="container text-center custom-margin">
+    <div class="row">
+        <div class="col-11 col-sm-11 col-md-11 col-lg-9 col-xl-8">
+            <h1 class="p-3 text-white">Mi Perfil</h1>
 
-    <h1 class="p-3 text-white">Mi Perfil</h1>
-    <div class="container p-5">
+            <div class="card card-settings align-items-center">
 
-        <div class="card card-settings mx-auto align-items-center">
+                <div class="m-4">
+                    @if (avatarImg) {
+                    <img src={{avatarImg}} class="img-fluid" style="max-width: 150px; max-height:150px;">
+                    }@else {
+                    <img src="assets/nophoto.png" class="img-fluid" style="max-width: 150; max-height:150px;">
+                    }
 
-            <div class="m-4">
-                <img src={{avatarImg}}>
-            </div>
 
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                (click)="getAvs()">
-                Cambiar Foto
-            </button>
+                </div>
 
-            <!-- Modal -->
-            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-                aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title text-white fs-5" id="staticBackdropLabel">Seleccione un Avatar:</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="card">
-                                <div class="row">
-                                    <div class="col-md-3" *ngFor="let url of imageUrls">
-                                        <img [src]="url" alt="Imagen de avatar" class="img-fluid rounded-circle"
-                                            (click)="selectAvatar(url)"
-                                            [class.selected-avatar]="selectedAvatar === url">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                    (click)="getAvs()">
+                    Cambiar Foto
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
+                    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title text-white fs-5" id="staticBackdropLabel">Seleccione un
+                                    Avatar:</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="card">
+                                    <div class="row">
+                                        <div class="col-md-3" *ngFor="let url of imageUrls">
+                                            <img [src]="url" alt="Imagen de avatar" class="img-fluid rounded-circle"
+                                                (click)="selectAvatar(url)"
+                                                [class.selected-avatar]="selectedAvatar === url">
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-
-                            <div class="modal-footer">
-                                <button class="btn btn-success mt-3" data-bs-dismiss="modal"
-                                    (click)="saveAvatar()">Guardar Avatar</button>
-                                <button class="btn btn-danger mt-3" data-bs-dismiss="modal">Cancelar</button>
-
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-            <form class="m-2" [formGroup]="userForm" (submit)="guardarAjustes()">
-                <div class="m-4">
-                    <label class="form-label">Nombre/s</label>
-                    <input type="text" class="form-control" formControlName="name">
-
-                </div>
-                <div class="m-4">
-                    <label class="form-label">Vocación</label>
-                    <input type="text" class="form-control" formControlName="vocacion">
-
-                </div>
-                <div class="m-4">
-                    <label class="form-label">Nombre de Usuario</label>
-                    <div class="input-group has-validation">
-                        <span class="input-group-text">&#64;</span>
-                        <input type="text" class="form-control opacity-75" formControlName="username" readonly>
-
-                    </div>
-                </div>
-                <div class="m-4">
-                    <label for="validationCustom03" class="form-label">Correo</label>
-                    <input type="text" class="form-control" formControlName="email">
-
-                </div>
-
-                <div class="m-4">
-                    <!-- Button Trigger modal -->
-                    <button type="button" class="btn btn-warning" data-bs-toggle="modal"
-                        data-bs-target="#passwordModal">
-                        Cambio de Contraseña
-                    </button>
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="passwordModal" #passwordModal tabindex="-1">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title text-white fs-5" id="exampleModalLabel">Cambio de Contraseña
-                                    </h1>
-                                </div>
-                                <div class="modal-body">
-                                    <form [formGroup]="passForm" (ngSubmit)="cambiarPass()">
-                                        <div class="m-5">
-                                            <label for="actualPass" class="form-label">Contraseña Actual</label>
-                                            <input type="text" id="actualPass" class="form-control"
-                                                placeholder="Ingrese Contraseña Actual" formControlName="actualPass">
-                                        </div>
-
-                                        <div class="m-5">
-                                            <label for="nuevaPass" class="form-label">Nueva Contraseña</label>
-                                            <input type="text" id="nuevaPass" class="form-control"
-                                                placeholder="Ingrese Nueva Contraseña" formControlName="nuevaPass">
-                                        </div>
-
-                                        <button type="submit" class="btn btn-success"
-                                            [disabled]="!passForm.valid">Guardar</button>
-                                    </form>
                                 </div>
 
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger"
-                                        data-bs-dismiss="modal">Cancelar</button>
+                                    <button class="btn btn-success mt-3" data-bs-dismiss="modal"
+                                        (click)="saveAvatar()">Guardar Avatar</button>
+                                    <button class="btn btn-danger mt-3" data-bs-dismiss="modal">Cancelar</button>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <form class="m-2" [formGroup]="userForm" (submit)="guardarAjustes()">
+                    <div class="m-4">
+                        <label class="form-label">Nombre/s</label>
+                        <input type="text" class="form-control" formControlName="name">
+
+                    </div>
+                    <div class="m-4">
+                        <label class="form-label">Vocación</label>
+                        <input type="text" class="form-control" formControlName="vocacion">
+
+                    </div>
+                    <div class="m-4">
+                        <label class="form-label">Nombre de Usuario</label>
+                        <div class="input-group has-validation">
+                            <span class="input-group-text">&#64;</span>
+                            <input type="text" class="form-control opacity-75" formControlName="username" readonly>
+
+                        </div>
+                    </div>
+                    <div class="m-4">
+                        <label for="validationCustom03" class="form-label">Correo</label>
+                        <input type="text" class="form-control" formControlName="email">
+
+                    </div>
+
+                    <div class="m-4">
+                        <!-- Button Trigger modal -->
+                        <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                            data-bs-target="#passwordModal">
+                            Cambio de Contraseña
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="passwordModal" #passwordModal tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title text-white fs-5" id="exampleModalLabel">Cambio de
+                                            Contraseña
+                                        </h1>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form [formGroup]="passForm" (ngSubmit)="cambiarPass()">
+                                            <div class="m-5">
+                                                <label for="actualPass" class="form-label">Contraseña Actual</label>
+                                                <input type="text" id="actualPass" class="form-control"
+                                                    placeholder="Ingrese Contraseña Actual"
+                                                    formControlName="actualPass">
+                                            </div>
+
+                                            <div class="m-5">
+                                                <label for="nuevaPass" class="form-label">Nueva Contraseña</label>
+                                                <input type="text" id="nuevaPass" class="form-control"
+                                                    placeholder="Ingrese Nueva Contraseña" formControlName="nuevaPass">
+                                            </div>
+
+                                            <button type="submit" class="btn btn-success"
+                                                [disabled]="!passForm.valid">Guardar</button>
+                                        </form>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger"
+                                            data-bs-dismiss="modal">Cancelar</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
+                    <div>
+                        @if (!saving) {
+                        <button class="btn btn-primary m-2" type="submit">Guardar</button>
+                        }@else{
+                        <button class="btn btn-primary m-2" type="submit" disabled>Guardando...</button>
+                        }
+                        <button class="btn btn-danger m-2" type="button" routerLink="/home">Salir</button>
+                    </div>
+                </form>
+            </div>
 
-                </div>
-                <div>
-                    @if (!saving) {
-                    <button class="btn btn-primary m-2" type="submit">Guardar</button>
-                    }@else{
-                    <button class="btn btn-primary m-2" type="submit" disabled>Guardando...</button>
-                    }
-                    <button class="btn btn-danger m-2" type="button" routerLink="/home">Salir</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
-    <div id="toastSave"
-        class="toast text-bg-success position-fixed top-0 start-50 translate-middle-x" role="alert">
-        <div class="d-flex">
-            <div class="toast-body">
-                <strong>Datos Guardados</strong>
+            <div id="toastSave" class="toast text-bg-success position-fixed top-0 start-50 translate-middle-x"
+                role="alert">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <strong>Datos Guardados</strong>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
 
 </div>
