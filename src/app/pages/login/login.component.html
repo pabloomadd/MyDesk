@@ -27,8 +27,15 @@
 
                     <div class="m-4">
                         <label class="form-label">Contraseña</label>
-                        <input [ngClass]="{'is-invalid': hasErrors('pass', 'required')}" type="text"
-                            class="form-control" formControlName="pass">
+                        <div class="input-group">
+                            <input [ngClass]="{'is-invalid': hasErrors('pass', 'required')}" type="text"
+                                [type]="isPassVisible ? 'text' : 'password'" class="form-control"
+                                formControlName="pass">
+
+                            <button type="button" class="btn btn-outline-secondary" (click)="togglePassVisible()">
+                                <img [src]="isPassVisible ? 'assets/eye.svg' : 'assets/eye-slash.svg'" width="20px">
+                            </button>
+                        </div>
                         @if(hasErrors('pass', 'required')){
                         <div class="text-danger">Contraseña es requerida</div>
                         }

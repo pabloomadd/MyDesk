@@ -16,7 +16,7 @@ import { Toast } from "bootstrap";
 export class LoginComponent implements OnInit {
 
   loginForm!: FormGroup;
-  
+  isPassVisible: boolean = false;
 
   constructor(private formBuilder: FormBuilder) {
     this.loginForm = this.formBuilder.group({
@@ -24,8 +24,6 @@ export class LoginComponent implements OnInit {
       pass: ['', [Validators.required, Validators.minLength(6)]]
     })
   }
-
-
 
   private _auth = inject(AuthService)
   private _router = inject(Router)
@@ -43,22 +41,27 @@ export class LoginComponent implements OnInit {
 
       try {
         await this._auth.logInEmailNPass(credential);
-        this.toastBien(); 
+        this.toastBien();
 
         setTimeout(() => {
           this._router.navigate(['home']);
         }, 1200);
       } catch (error) {
-        
+
         this.toastMal();
       }
     } else {
-      this.toastMal(); 
+      this.toastMal();
     }
   }
 
   hasErrors(controlName: string, errorType: string) {
     return this.loginForm.get(controlName)?.hasError(errorType) && this.loginForm.get(controlName)?.touched;
+  }
+
+  togglePassVisible() {
+    this.isPassVisible = !this.isPassVisible;
+
   }
 
   toastBien() {
