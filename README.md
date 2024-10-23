@@ -1,5 +1,50 @@
-# MyDeskAngular
+Proyecto Personal
+# MyDesk
 
-Proyecto en Desarrollo...
+MyDesk una aplicación web con enfoque en un escritorio web donde se pueden escribir notas personales, tales como recordatorios, notas personales, recetas de comida, entre otras.  
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.1.
+## Demo
+Demostración en [Netlify.com](https://mydeskang.netlify.app/)
+
+### - Registro de Usuario
+<img src="./public/demo/register.png" width="400px">
+
+### - Acceso de Usuario
+<img src="./public/demo/login.png" width="400px">
+
+### - Página Principal
+<img src="./public/demo/home.png" width="600px">
+
+### - Escritura de Notas
+<img src="./public/demo/writeNote.png" width="600px">
+
+### - Edición de Notas
+<img src="./public/demo/editNote.png" width="600px">
+
+### - Perfil de Usuario
+<img src="./public/demo/profile.png" width="600px">
+
+### - Ajustes de Usuario
+<img src="./public/demo/settings.png" width="600px">
+
+
+## Funciones Principales
+- Acceso/Registro de Usuario
+- Datos/Configuración de Usuario en Cloud
+- Escritura, Edición y Borrado de Notas en Cloud
+- Widgets Clima y Reloj Personalizados
+- Responsive (Ajustable a Pantallas Pequeñas)
+
+## Tecnologías Utilizadas
+- Front-End: 
+	- Angular Framework v18.2
+	- Lenguaje TypeScript
+
+- CSS:
+	- Bootstrap v5.3
+	- CSS Puro para Detalles
+
+- Otras:
+	- Cloud Firestore
+	- Firebase Authentication 
+	- Firebase Storage

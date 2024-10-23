@@ -162,6 +162,13 @@ export class PerfilComponent implements OnInit {
     if (this.selectedAvatar) {
       this._apiAuth.saveAvatar(this.selectedAvatar)
         .then(() => {
+          const existingData = localStorage.getItem('userData');
+          if (existingData) {
+            const userData = JSON.parse(existingData);
+            userData.avatar = this.selectedAvatar;  // O la propiedad que estés usando
+            localStorage.setItem('userData', JSON.stringify(userData));
+          }
+
           console.log('Avatar guardado correctamente');
         })
         .catch((error) => {
@@ -178,7 +185,7 @@ export class PerfilComponent implements OnInit {
     this.isPassVisible = !this.isPassVisible;
   }
 
-  resetPassForm(){
+  resetPassForm() {
     this.passForm.reset();
   }
 
