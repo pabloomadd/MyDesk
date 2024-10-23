@@ -13,19 +13,19 @@ Demostración en [Netlify.com](https://mydeskang.netlify.app/)
 <img src="./public/demo/login.png" width="400px">
 
 ### - Página Principal
-<img src="./public/demo/home.png" width="600px">
+<img src="./public/demo/home.png">
 
 ### - Escritura de Notas
-<img src="./public/demo/writeNote.png" width="600px">
+<img src="./public/demo/writeNote.png">
 
 ### - Edición de Notas
-<img src="./public/demo/editNote.png" width="600px">
+<img src="./public/demo/editNote.png">
 
 ### - Perfil de Usuario
-<img src="./public/demo/profile.png" width="600px">
+<img src="./public/demo/profile.png">
 
 ### - Ajustes de Usuario
-<img src="./public/demo/settings.png" width="600px">
+<img src="./public/demo/settings.png">
 
 
 ## Funciones Principales
