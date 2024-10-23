@@ -221,15 +221,12 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   getUID() {
     const UID = this._apiAuth.getCurrentUID()
-    console.log("UID Actual: ", UID)
   }
 
   getData(): Promise<void> {
     return new Promise((resolve, reject) => {
       this._apiAuth.getUserDocument().subscribe(
         (userData) => {
-          console.log('Datos Obtenidos: ', userData);
-
           this.configReloj = userData.wClock;
           this.configClima = userData.wWeather;
           this.configCiudad = userData.ciudad;

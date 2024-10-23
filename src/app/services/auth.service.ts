@@ -68,7 +68,6 @@ export class AuthService {
       .then((userCredential) => {
 
         const user = userCredential.user;
-        console.log('Usuario autenticado:', user);
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -142,7 +141,6 @@ export class AuthService {
         userid: uid
       });
       console.log("Datos del Usuario Creados")
-      console.log("Usuario Creado ID: ", docRef.id);
 
     } catch (error) {
       console.error("Error al Agregar Usuario: ", error);
@@ -263,7 +261,6 @@ export class AuthService {
         uid: uid
       });
 
-      console.log("Document written with ID: ", docRef.id);
     } catch (error) {
       console.error("Error adding document: ", error);
     }
@@ -274,7 +271,7 @@ export class AuthService {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
+      console.log("Registro existe");
     } else {
       console.log("Ese registro no existe!");
     }

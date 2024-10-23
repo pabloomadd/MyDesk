@@ -20,7 +20,7 @@ export class RegisterComponent implements OnInit {
   private _router = inject(Router)
 
   registerForm!: FormGroup;
-
+  registering: boolean = false;
   isPassVisible: boolean = false;
 
   ngOnInit(): void {
@@ -37,6 +37,7 @@ export class RegisterComponent implements OnInit {
     if (this.registerForm.valid) {
       const username = this.registerForm.value.username || '';
 
+      this.registering = true;
       try {
         // Verificar si el username ya está en uso
         const usernameExists = await this._apiAuth.checkUsernameExists(username);
@@ -66,14 +67,17 @@ export class RegisterComponent implements OnInit {
           );
         }
 
-        console.log('Registro realizado con éxito');
         this.toastBien();
+        this.registering = false;
 
       } catch (error) {
         console.error('Error durante el registro: ', error);
+        this.registering = false;
         this.toastMal('El Correo Electrónico ya está en uso');
       }
     }
+
+
   }
 
   hasErrors(controlName: string, errorType: string) {

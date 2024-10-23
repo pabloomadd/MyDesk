@@ -41,7 +41,6 @@ export class NavbarComponent implements OnInit {
     } else {
       this._apiAuth.getUserDocument().subscribe(
         (userData) => {
-          console.log('Datos Obtenidos: ', userData);
 
           this.avatarImg = userData.avatar;
           this.nombre = userData.name;

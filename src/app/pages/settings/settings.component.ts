@@ -47,7 +47,6 @@ export class SettingsComponent implements OnInit {
       this.saving = true;
 
       const updatedConfig: AppConfig = this.settingsForm.value;
-      console.log(updatedConfig);
 
       await this._apiAuth.editUserDocument(updatedConfig);
 
@@ -96,7 +95,6 @@ export class SettingsComponent implements OnInit {
     } else {
       this._apiAuth.getUserDocument().subscribe(
         (userData) => {
-          console.log('Datos Obtenidos: ', userData);
 
           this.configReloj = userData.wClock;
           this.configClima = userData.wWeather;

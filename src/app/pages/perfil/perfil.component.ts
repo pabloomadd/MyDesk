@@ -76,8 +76,6 @@ export class PerfilComponent implements OnInit {
     } else {
       this._apiAuth.getUserDocument().subscribe(
         (userData) => {
-          console.log('Datos Obtenidos: ', userData);
-
           this.avatarImg = userData.avatar;
           this.nombre = userData.name;
           this.vocacion = userData.vocacion;
@@ -111,7 +109,6 @@ export class PerfilComponent implements OnInit {
         await this._apiAuth.reautenticarUsuario(passActual);
 
         await this._apiAuth.cambiarContraseña(newPass);
-        console.log('Contraseña cambiada exitosamente');
 
       } catch (error) {
         console.error('Error al cambiar la contraseña:', error);
@@ -124,7 +121,6 @@ export class PerfilComponent implements OnInit {
       this.saving = true;
 
       const updatedConfig: Data = this.userForm.value;
-      console.log(updatedConfig);
 
       await this._apiAuth.editUserDocument(updatedConfig);
 
@@ -153,7 +149,6 @@ export class PerfilComponent implements OnInit {
   getAvs() {
     this._apiAuth.listImages().then((urls) => {
       this.imageUrls = urls;
-      console.log("URLs de imágenes:", this.imageUrls);
     }).catch((error) => {
       console.error("Error al obtener las imágenes: ", error);
     });
@@ -161,7 +156,6 @@ export class PerfilComponent implements OnInit {
 
   selectAvatar(url: string) {
     this.selectedAvatar = url;
-    console.log("Avatar seleccionado:", url);
   }
 
   saveAvatar() {

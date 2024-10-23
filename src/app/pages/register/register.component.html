@@ -75,8 +75,13 @@
                         }
                     </div>
                     <div class="p-2">
+                        @if (!registering) {
                         <button class="btn btn-primary" [disabled]="!registerForm.valid"
                             type="submit">Registrarse</button>
+                        }@else {
+                        <button class="btn btn-primary" disabled>Registrando...</button>
+                        }
+
                     </div>
                     <br>
                     <p>Ya tienes Cuenta? <a [routerLink]="['']">Ingresa</a></p>
