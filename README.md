@@ -6,27 +6,39 @@ MyDesk una aplicación web con enfoque en un escritorio web donde se pueden escr
 ## Demo
 Demostración en [Netlify.com](https://mydeskang.netlify.app/)
 
+## Vistas
+<div align="center">
+
 ### - Registro de Usuario
-<img src="./public/demo/register.png" width="400px">
+
+<img src="./public/demo/register.png" width="450px">
+<br><br>
 
 ### - Acceso de Usuario
-<img src="./public/demo/login.png" width="400px">
+<img src="./public/demo/login.png" width="450px">
+<br><br>
+
 
 ### - Página Principal
-<img src="./public/demo/home.png">
+<img src="./public/demo/home.png" width="600px">
+<br><br>
 
 ### - Escritura de Notas
-<img src="./public/demo/writeNote.png">
+<img src="./public/demo/writeNote.png" width="600px">
+<br><br>
 
 ### - Edición de Notas
-<img src="./public/demo/editNote.png">
+<img src="./public/demo/editNote.png" width="600px">
+<br><br>
 
 ### - Perfil de Usuario
-<img src="./public/demo/profile.png">
+<img src="./public/demo/profile.png" width="600px">
+<br><br>
 
 ### - Ajustes de Usuario
-<img src="./public/demo/settings.png">
+<img src="./public/demo/settings.png" width="600px">
 
+</div>
 
 ## Funciones Principales
 - Acceso/Registro de Usuario
