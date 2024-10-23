@@ -4,7 +4,8 @@ Proyecto Personal
 MyDesk una aplicación web con enfoque en un escritorio web donde se pueden escribir notas personales, tales como recordatorios, notas personales, recetas de comida, entre otras.  
 
 ## Demo
-Demostración en [Netlify.com](https://mydeskang.netlify.app/)
+Demostración en 
+<a href="https://mydeskang.netlify.app/" target="_blank">Netlify.com</a>
 
 ## Vistas
 <div align="center">
