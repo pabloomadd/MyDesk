@@ -21,6 +21,8 @@ export class RegisterComponent implements OnInit {
 
   registerForm!: FormGroup;
 
+  isPassVisible: boolean = false;
+
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
       name: ['', [Validators.required, Validators.minLength(5)]],
@@ -34,26 +36,26 @@ export class RegisterComponent implements OnInit {
   async registro() {
     if (this.registerForm.valid) {
       const username = this.registerForm.value.username || '';
-  
+
       try {
         // Verificar si el username ya está en uso
         const usernameExists = await this._apiAuth.checkUsernameExists(username);
-        
+
         if (usernameExists) {
           console.error('El nombre de usuario ya está en uso');
-          this.toastMal('El Nombre de Usuario ya está en uso'); 
+          this.toastMal('El Nombre de Usuario ya está en uso');
           return; // Detener el registro
         }
-  
+
         const credential: Credential = {
           email: this.registerForm.value.email || '',
           password: this.registerForm.value.pass || ''
         };
-  
+
         const userCred = await this._apiAuth.crearUsuarioEmailNPass(credential);
-  
+
         await this._apiAuth.logOut();
-  
+
         const uid = userCred?.user?.uid;
         if (uid) {
           await this._apiAuth.newUser(
@@ -63,10 +65,10 @@ export class RegisterComponent implements OnInit {
             uid
           );
         }
-  
+
         console.log('Registro realizado con éxito');
         this.toastBien();
-        
+
       } catch (error) {
         console.error('Error durante el registro: ', error);
         this.toastMal('El Correo Electrónico ya está en uso');
@@ -90,14 +92,18 @@ export class RegisterComponent implements OnInit {
     }
   }
 
+  togglePassVisible() {
+    this.isPassVisible = !this.isPassVisible;
+  }
+
   toastMal(message: string) {
     const toastEl = document.getElementById('errorToast');
     const messageEl = document.getElementById('errorToastMsg');
-  
+
     if (toastEl && messageEl) {
       // Actualizar el mensaje del toast
       messageEl.textContent = message;
-  
+
       // Mostrar el toast
       const toast = new Toast(toastEl, {
         autohide: true,

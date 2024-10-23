@@ -33,6 +33,8 @@ export class PerfilComponent implements OnInit {
 
   saving?: boolean;
 
+  isPassVisible: boolean = false;
+
   constructor(private formBuilder: FormBuilder) {
 
     this.userForm = this.formBuilder.group({
@@ -172,6 +174,18 @@ export class PerfilComponent implements OnInit {
           console.error('Error al guardar el avatar:', error);
         });
     }
+  }
+
+  hasErrors(controlName: string, errorType: string) {
+    return this.passForm.get(controlName)?.hasError(errorType) && this.passForm.get(controlName)?.touched;
+  }
+
+  togglePassVisible() {
+    this.isPassVisible = !this.isPassVisible;
+  }
+
+  resetPassForm(){
+    this.passForm.reset();
   }
 
   toastSave() {

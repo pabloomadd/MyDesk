@@ -76,7 +76,7 @@
                     </div>
                     <div class="m-4">
                         <label for="validationCustom03" class="form-label">Correo</label>
-                        <input type="text" class="form-control" formControlName="email">
+                        <input type="text" class="form-control opacity-75" formControlName="email" readonly>
 
                     </div>
 
@@ -98,27 +98,64 @@
                                     </div>
                                     <div class="modal-body">
                                         <form [formGroup]="passForm" (ngSubmit)="cambiarPass()">
-                                            <div class="m-5">
-                                                <label for="actualPass" class="form-label">Contraseña Actual</label>
-                                                <input type="text" id="actualPass" class="form-control"
-                                                    placeholder="Ingrese Contraseña Actual"
-                                                    formControlName="actualPass">
+                                            <div class="m-3">
+                                                <strong for="actualPass" class="form-label text-white">Contraseña
+                                                    Actual</strong>
+                                                <div class="input-group">
+                                                    <input
+                                                        [ngClass]="{'is-invalid': hasErrors('actualPass', 'required') || hasErrors('actualPass', 'minlength')}"
+                                                        [type]="isPassVisible ? 'text' : 'password'"
+                                                        class="form-control" class="form-control"
+                                                        placeholder="Ingrese Contraseña Actual"
+                                                        formControlName="actualPass">
+
+                                                    <button type="button" class="btn btn-light ms-2"
+                                                        (click)="togglePassVisible()">
+                                                        <img [src]="isPassVisible ? 'assets/eye.svg' : 'assets/eye-slash.svg'"
+                                                            width="20px">
+                                                    </button>
+                                                </div>
+
+                                                @if(hasErrors('actualPass','required')){
+                                                <div class="text-white">**Contraseña es requerida</div>
+                                                }
+                                                @if(hasErrors('actualPass','minlength')){
+                                                <div class="text-white">**Contraseña debe ser de al menos 6 carácteres
+                                                </div>
+                                                }
                                             </div>
 
-                                            <div class="m-5">
-                                                <label for="nuevaPass" class="form-label">Nueva Contraseña</label>
-                                                <input type="text" id="nuevaPass" class="form-control"
-                                                    placeholder="Ingrese Nueva Contraseña" formControlName="nuevaPass">
+
+
+                                            <div class="m-3">
+                                                <strong for="nuevaPass" class="form-label text-white">Nueva
+                                                    Contraseña</strong>
+                                                <div class="input-group">
+                                                    <input
+                                                        [ngClass]="{'is-invalid': hasErrors('nuevaPass', 'required') || hasErrors('nuevaPass', 'minlength')}"
+                                                        [type]="isPassVisible ? 'text' : 'password'"
+                                                        class="form-control" class="form-control"
+                                                        placeholder="Ingrese Nueva Contraseña"
+                                                        formControlName="nuevaPass">
+                                                </div>
+                                                @if(hasErrors('nuevaPass','required')){
+                                                <div class="text-white">**Nueva Contraseña es requerida</div>
+                                                }
+                                                @if(hasErrors('nuevaPass','minlength')){
+                                                <div class="text-white">**Nueva Contraseña debe ser de al menos 6
+                                                    carácteres
+                                                </div>
+                                                }
                                             </div>
 
-                                            <button type="submit" class="btn btn-success"
+                                            <button type="submit" class="btn btn-success m-3"
                                                 [disabled]="!passForm.valid">Guardar</button>
                                         </form>
                                     </div>
 
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-danger"
-                                            data-bs-dismiss="modal">Cancelar</button>
+                                            data-bs-dismiss="modal" (click)="resetPassForm()">Cancelar</button>
                                     </div>
                                 </div>
                             </div>

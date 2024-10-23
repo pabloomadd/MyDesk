@@ -56,22 +56,27 @@
 
                     <div class="p-2">
                         <label class="form-label">Contraseña</label>
-                        <input
-                            [ngClass]="{'is-invalid': hasErrors('pass', 'required') || hasErrors('pass', 'minlength')}"
-                            type="text" class="form-control" formControlName="pass">
+                        <div class="input-group">
+                            <input
+                                [ngClass]="{'is-invalid': hasErrors('pass', 'required') || hasErrors('pass', 'minlength')}"
+                                [type]="isPassVisible ? 'text' : 'password'" class="form-control"
+                                formControlName="pass">
+
+                            <button type="button" class="btn btn-outline-secondary" (click)="togglePassVisible()">
+                                <img [src]="isPassVisible ? 'assets/eye.svg' : 'assets/eye-slash.svg'" width="20px">
+                            </button>
+                        </div>
+
                         @if(hasErrors('pass','required')){
                         <div class="text-danger">Contraseña es requerida</div>
                         }
                         @if(hasErrors('pass','minlength')){
                         <div class="text-danger">Contraseña debe ser de al<br>menos 6 carácteres</div>
-
                         }
                     </div>
                     <div class="p-2">
                         <button class="btn btn-primary" [disabled]="!registerForm.valid"
                             type="submit">Registrarse</button>
-                        <!-- <button class="btn btn-dark" type="button" (click)="toastBien()">Toast</button>
-                        <button class="btn btn-dark" type="button" (click)="toastMal('hola')">ToastMal</button> -->
                     </div>
                     <br>
                     <p>Ya tienes Cuenta? <a [routerLink]="['']">Ingresa</a></p>
