@@ -1,11 +1,20 @@
-<div class="all">
+<header>
     @if((showNav)){
     <app-navbar />
+    <app-mobnav />
     }
+</header>
 
-    <body class="content">
+<body>
+    <div class="mob">
         <router-outlet />
-    </body>
+    </div>
+</body>
 
+
+<footer>
     <app-footer />
-</div>
+</footer>
+
+<!-- Volver a margin-custom de antes.
+Individual para cada página y ajustable en Home -->

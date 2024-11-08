@@ -1,90 +1,93 @@
-<div class="container text-light text-center pt-5 pb-5 custom-margin">
+<div class="container text-light text-center pt-5 pb-5" [ngClass]="{'custom-margin' : configReloj && configClima}">
     <div class="row">
         <div class="container col-11 col-sm-11 col-md-11 col-lg-7">
+            <div>
+                <div class="card main-card">
+                    <h4 class="text-white m-3">Escribir Nueva Nota</h4>
+                    <div class="card m-3">
+                        <form [formGroup]="noteForm" (submit)="sumbit($event)">
 
-            <div class="card main-card">
-                <h4 class="text-white m-3">Escribir Nueva Nota</h4>
-                <div class="card m-3">
-                    <form [formGroup]="noteForm" (submit)="sumbit($event)">
+                            <input type="text" class="form-control" placeholder="Titulo de la Nota"
+                                formControlName="title">
 
-                        <input type="text" class="form-control" placeholder="Titulo de la Nota" formControlName="title">
+                            <textarea rows="5" class="form-control" placeholder="Descripción de la Nota"
+                                formControlName="descrip"></textarea>
+                            @if (creating) {
+                            <button class="btn btn-success m-2" type="submit" [disabled]="!noteForm.valid">Crear
+                                Nota</button>
+                            }@else if(!creating) {
+                            <button class="btn btn-warning m-2" type="submit" [disabled]="!noteForm.valid">Editar
+                                Nota</button>
+                            <button class="btn btn-danger m-2" (click)="cancelEditBtn()">Cancelar Edición</button>
+                            }
 
-                        <textarea rows="5" class="form-control" placeholder="Descripción de la Nota"
-                            formControlName="descrip"></textarea>
-                        @if (creating) {
-                        <button class="btn btn-success m-2" type="submit" [disabled]="!noteForm.valid">Crear
-                            Nota</button>
-                        }@else if(!creating) {
-                        <button class="btn btn-warning m-2" type="submit" [disabled]="!noteForm.valid">Editar
-                            Nota</button>
-                        <button class="btn btn-danger m-2" (click)="cancelEditBtn()">Cancelar Edición</button>
-                        }
+                        </form>
 
-                    </form>
-
-                    <div class="toast-container position-fixed top-0">
-                        <div id="outToast" class="toast" role="alert">
-                            <div class="toast-body text-bg-danger">
-                                <strong>Cerrando Sesión</strong>
+                        <div class="toast-container position-fixed top-0">
+                            <div id="outToast" class="toast" role="alert">
+                                <div class="toast-body text-bg-danger">
+                                    <strong>Cerrando Sesión</strong>
+                                </div>
                             </div>
                         </div>
+
                     </div>
+                    <hr>
+                    <h3 class="text-white">Mis Notas</h3>
+                    <div class="card m-3 p-3" id="vistaNotas">
 
-                </div>
-                <hr>
-                <h3 class="text-white">Mis Notas</h3>
-                <div class="card m-3 p-3" id="vistaNotas">
+                        @if (!loadingNotes) {
+                        @for (note of notesList; track $index) {
+                        <div class="card border-3 shadow m-2 p-3">
+                            <h4>{{note.titulo}}</h4>
+                            <p>{{note.descripcion}}</p>
 
-                    @if (!loadingNotes) {
-                    @for (note of notesList; track $index) {
-                    <div class="card border-3 shadow m-2 p-3">
-                        <h4>{{note.titulo}}</h4>
-                        <p>{{note.descripcion}}</p>
+                            <div>
+                                <button class="btn btn-warning m-1" (click)="editNoteBtn(note.id)">Editar</button>
+                                <!-- Button Trigger modal -->
+                                <button type="button" class="btn btn-danger m-1" data-bs-toggle="modal"
+                                    [attr.data-bs-target]="'#deleteModal' + note.id">
+                                    Borrar
+                                </button>
 
-                        <div>
-                            <button class="btn btn-warning m-1" (click)="editNoteBtn(note.id)">Editar</button>
-                            <!-- Button Trigger modal -->
-                            <button type="button" class="btn btn-danger m-1" data-bs-toggle="modal"
-                                [attr.data-bs-target]="'#deleteModal' + note.id">
-                                Borrar
-                            </button>
-
-                            <!-- Modal -->
-                            <div class="modal fade" [id]="'deleteModal' + note.id" tabindex="-1">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title text-white fs-5" id="exampleModalLabel">Borrar Nota
-                                            </h1>
-                                        </div>
-                                        <div class="modal-body">
-                                            <strong class="text-white">¿Seguro que quieres borrar la Nota
-                                                "{{note.titulo}}"?</strong>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-success m-2"
-                                                (click)="deleteNote(note.id)" data-bs-dismiss="modal">Borrar
-                                                Nota</button>
-                                            <button type="button" class="btn btn-danger m-2"
-                                                data-bs-dismiss="modal">Cancelar</button>
+                                <!-- Modal -->
+                                <div class="modal fade" [id]="'deleteModal' + note.id" tabindex="-1">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title text-white fs-5" id="exampleModalLabel">Borrar
+                                                    Nota
+                                                </h1>
+                                            </div>
+                                            <div class="modal-body">
+                                                <strong class="text-white">¿Seguro que quieres borrar la Nota
+                                                    "{{note.titulo}}"?</strong>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-success m-2"
+                                                    (click)="deleteNote(note.id)" data-bs-dismiss="modal">Borrar
+                                                    Nota</button>
+                                                <button type="button" class="btn btn-danger m-2"
+                                                    data-bs-dismiss="modal">Cancelar</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    }
-                    }@else if (loadingNotes) {
-                    <div class="card border-3 shadow m-2 p-3">
-                        <div class="m-5">
-                            <img src="/assets/loading.gif" alt="" width="200px" height="200px">
-                            <H4>Cargando...</H4>
+                        }
+                        }@else if (loadingNotes) {
+                        <div class="card border-3 shadow m-2 p-3">
+                            <div class="m-5">
+                                <img src="/assets/loading.gif" alt="" width="200px" height="200px">
+                                <H4>Cargando...</H4>
+                            </div>
                         </div>
+                        }
+
                     </div>
-                    }
 
                 </div>
-
             </div>
 
         </div>
@@ -128,7 +131,8 @@
             <div class="card main-card m-3 pt-3 pb-1 text-white text-center">
                 <h5>Clima</h5>
                 @if(configCiudad == '' || configPais == ''){
-                <p class=" m-2 p-3 text-white fs-6">*Para ver el Clima es necesario asignar una Ciudad y un País en Ajustes</p>
+                <p class=" m-2 p-3 text-white fs-6">*Para ver el Clima es necesario asignar una Ciudad y un País en
+                    Ajustes</p>
                 }@else{
                 @if (!loadingWeath) {
                 <div class="card rounded-2 m-2 weather-background text-white">

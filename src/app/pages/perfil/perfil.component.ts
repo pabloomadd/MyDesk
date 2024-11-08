@@ -1,9 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
-import { AppConfig } from '../../../models/config.model';
 import { Data } from '../../../models/userdata,model';
 import { Toast } from 'bootstrap';
 
@@ -18,6 +17,9 @@ export class PerfilComponent implements OnInit {
 
 
   private _apiAuth = inject(AuthService);
+  private _router = inject(Router)
+
+
   userForm!: FormGroup;
   passForm!: FormGroup;
 
@@ -31,7 +33,8 @@ export class PerfilComponent implements OnInit {
   userId: string = '';
   avatarImg?: string;
 
-  saving?: boolean;
+  saving: boolean = false;
+  closing: boolean = false;
 
   isPassVisible: boolean = false;
 
@@ -53,7 +56,6 @@ export class PerfilComponent implements OnInit {
 
   ngOnInit(): void {
     this.getData();
-    this.saving = false;
   }
 
   getData() {
@@ -201,4 +203,19 @@ export class PerfilComponent implements OnInit {
       toast.show();
     }
   }
+
+  logOut() {
+
+    this.closing = true;
+    this._apiAuth.logOut();
+    localStorage.clear();
+    setTimeout(() => {
+      this.closing = false;
+      this._router.navigate(['login']);
+    }, 1500);
+    
+
+  }
+
+
 }

@@ -4,11 +4,12 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from "./navbar/navbar.component";
 import { AuthService } from './services/auth.service';
 import { FooterComponent } from "./footer/footer.component";
+import { MobnavComponent } from "./mobnav/mobnav.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, NavbarComponent, FooterComponent],
+  imports: [CommonModule, RouterOutlet, RouterLink, NavbarComponent, FooterComponent, MobnavComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -24,6 +25,5 @@ export class AppComponent implements OnInit {
     })
 
   }
-
 
 }
