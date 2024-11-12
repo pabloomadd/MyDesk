@@ -1,16 +1,16 @@
 <div class="container text-center custom-margin">
     <div class="row">
-        <div class="col-11 col-sm-11 col-md-11 col-lg-9 col-xl-8">
+        <div class="col-11 col-sm-11 col-md-11 col-lg-7">
             <h1 class="text-white p-3">Mis Ajustes</h1>
 
 
-            <div class="card card-settings">
+            <div class="card card-settings align-items-center">
                 <div class="m-4">
                     <h4 class="text-white">Widgets</h4>
                     <div class="row">
                         <form [formGroup]="settingsForm" (submit)="guardarAjustes()">
 
-                            <div class="btn-group m-2 d-none d-lg-inline-flex">
+                            <div class="btn-group m-2">
                                 <div class="m-2">
                                     <input type="checkbox" class="btn-check" id="btncheck" formControlName="wClock">
                                     <label class="btn btn-outline-warning " for="btncheck">
@@ -33,11 +33,14 @@
 
                             </div>
                             <div class="my-4">
-                                <p class="text-white d-none d-lg-inline-flex">*Los Widgets Iluminados son los Activos
-                                    Actualmente</p>
+                                <p class="text-white">
+                                    *Los Widgets Iluminados son los Activos
+                                    Actualmente
+                                    <br>
+                                    *Los Widgets sólo son Visibles en Pantallas
+                                    Grandes 
+                                </p>
 
-                                <p class="text-white d-md-block d-lg-none">*Los Widgets solo son Visibles en Pantallas
-                                    Grandes</p>
                             </div>
                             <h4 class="text-white">Ajustes de Zona</h4>
                             <div class="m-4">
@@ -65,7 +68,7 @@
                             }
 
                         </form>
-                        
+
                     </div>
 
                 </div>
