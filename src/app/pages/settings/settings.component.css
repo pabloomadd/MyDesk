@@ -6,11 +6,11 @@ label {
     color: white;
 }
 
-@media (max-width: 767px) {
+@media (min-width: 0px) and (max-width: 767px) {
     .custom-margin {
-        margin-left: 12%;
+        margin-left: 10%;
         margin-right: 0;
-        max-width: 80%;
+        max-width: 87%;
     }
 }
 

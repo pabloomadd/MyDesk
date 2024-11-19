@@ -1,4 +1,4 @@
-<div class="container text-center pt-5">
+<div class="container text-center pt-2">
 
     <div class="row justify-content-center">
         <div class="col-9 col-sm-11 col-md-9 col-lg-7 col-xl-5">
@@ -11,10 +11,10 @@
 
             <div class="card mx-auto">
 
-                <h2 class="mt-4">Registro de Usuario</h2>
+                <h2 class="p-4">Registro de Usuario</h2>
                 <form class="mt-4 mx-auto m-5" [formGroup]="registerForm" (submit)="registro()">
 
-                    <div class="p-2">
+                    <div class="m-4">
                         <label class="form-label">Nombre</label>
                         <input
                             [ngClass]="{'is-invalid': hasErrors('name', 'required') || hasErrors('name', 'minlength')}"
@@ -28,7 +28,7 @@
 
                     </div>
 
-                    <div class="p-2">
+                    <div class="m-4">
                         <label class="form-label">Nombre de Usuario</label>
                         <input
                             [ngClass]="{'is-invalid': hasErrors('username', 'required') || hasErrors('username', 'minlength')}"
@@ -41,7 +41,7 @@
                         }
                     </div>
 
-                    <div class="p-2">
+                    <div class="m-4">
                         <label class="form-label">Correo Eléctronico</label>
                         <input [ngClass]="{'is-invalid': hasErrors('email', 'required') || hasErrors('email', 'email')}"
                             type="text" class="form-control" formControlName="email">
@@ -54,7 +54,7 @@
                         }
                     </div>
 
-                    <div class="p-2">
+                    <div class="m-4">
                         <label class="form-label">Contraseña</label>
                         <div class="input-group">
                             <input
@@ -74,7 +74,7 @@
                         <div class="text-danger">Contraseña debe ser de al<br>menos 6 carácteres</div>
                         }
                     </div>
-                    <div class="p-2">
+                    <div class="m-2">
                         @if (!registering) {
                         <button class="btn btn-primary" [disabled]="!registerForm.valid"
                             type="submit">Registrarse</button>

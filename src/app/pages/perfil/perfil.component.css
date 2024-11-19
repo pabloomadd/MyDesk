@@ -15,9 +15,17 @@ label {
     opacity: 0.8;
 }
 
-@media (max-width: 767px) {
+@media (min-width: 0px) and (max-width: 575px) {
     .custom-margin {
-        margin-left: 12%;
+        margin-left: 10%;
+        margin-right: 0;
+        max-width: 80%;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+    .custom-margin {
+        margin-left: 13%;
         margin-right: 0;
         max-width: 80%;
     }
