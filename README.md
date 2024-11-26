@@ -1,7 +1,7 @@
 Proyecto Personal
 # MyDesk
 
-MyDesk una aplicación web con enfoque en un escritorio web donde se pueden escribir notas personales, tales como recordatorios, notas personales, recetas de comida, entre otras.  
+MyDesk una aplicación web con enfoque en un escritorio web donde se pueden escribir notas personales, tales como recordatorios, recetas de comida, apuntes, entre otros.  
 
 ## Demo
 Demostración en 
@@ -61,3 +61,4 @@ Demostración en
 	- Cloud Firestore
 	- Firebase Authentication 
 	- Firebase Storage
+	- Capacitor (Android)

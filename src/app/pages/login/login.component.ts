@@ -55,6 +55,19 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  demoLogin() {
+    this._auth
+      .loginAsDemo()
+      .then(() => {
+        console.log('Logged in as Demo');
+        this._router.navigate(['/home']); 
+      })
+      .catch((error) => {
+        console.error('Error in Demo:', error);
+        this.toastLoginDemo();
+      });
+  }
+
   hasErrors(controlName: string, errorType: string) {
     return this.loginForm.get(controlName)?.hasError(errorType) && this.loginForm.get(controlName)?.touched;
   }
@@ -89,6 +102,20 @@ export class LoginComponent implements OnInit {
       toast.show();
     }
   }
+
+  toastLoginDemo() {
+    const toastEl = document.getElementById('demoDanger');
+
+    if (toastEl) {
+
+      const toast = new Toast(toastEl, {
+        autohide: true,
+        delay: 5000
+      });
+      toast.show();
+    }
+  }
+
 
 
 }

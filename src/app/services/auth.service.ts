@@ -84,6 +84,16 @@ export class AuthService {
       });
   }
 
+
+  loginAsDemo() {
+    const demoCredentials = {
+      email: environment.demo1,
+      password: environment.demo2,
+    };
+
+    return signInWithEmailAndPassword(this.auth, demoCredentials.email, demoCredentials.password);
+  }
+
   async reautenticarUsuario(passwordActual: string): Promise<void> {
     const user = this.auth.currentUser;
     if (user && user.email) {

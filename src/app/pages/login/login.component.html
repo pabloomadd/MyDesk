@@ -42,18 +42,20 @@
 
                     </div>
                     <div>
-                        <button class="btn btn-primary m-2" [disabled]="!loginForm.valid" type="submit">Acceder</button>
+                        <button class="btn btn-primary m-1" [disabled]="!loginForm.valid" type="submit">Acceder</button>
                     </div>
-                    <br>
                     <p>Aun no tienes Cuenta? <a [routerLink]="['/register']">Registrate</a></p>
+                    <br>
+                    <button class="btn btn-dark m-2" type="button" (click)="demoLogin()">Acceder como Invitado</button>
                 </form>
 
-                <div class="m-4">
+                <!-- <div class="m-4">
                     <p>Descarga la App para Android</p>
-                    <a class="btn btn-success" href="https://drive.google.com/file/d/16JyhMrQwjrRYJ6rspIZ-i90WHJwW6taG" target="_blank">
+                    <a class="btn btn-success" href="https://drive.google.com/file/d/16JyhMrQwjrRYJ6rspIZ-i90WHJwW6taG"
+                        target="_blank">
                         Descargar <img src="assets/download.svg">
                     </a>
-                </div>
+                </div> -->
 
                 <div id="liveToast"
                     class="toast align-items-center text-bg-success position-fixed top-0 start-50 translate-middle-x"
@@ -74,6 +76,18 @@
                         </div>
                     </div>
                 </div>
+
+                <div id="demoDanger"
+                    class="toast align-items-center text-bg-danger position-fixed top-0 start-50 translate-middle-x"
+                    role="alert">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <strong>Inicio de Sesión Sobrecargado. Favor de volver a intentar en algunos minutos</strong>
+                        </div>
+                    </div>
+                </div>
+
+
 
             </div>
         </div>

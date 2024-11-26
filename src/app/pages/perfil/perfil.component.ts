@@ -19,7 +19,6 @@ export class PerfilComponent implements OnInit {
   private _apiAuth = inject(AuthService);
   private _router = inject(Router)
 
-
   userForm!: FormGroup;
   passForm!: FormGroup;
 
@@ -113,7 +112,7 @@ export class PerfilComponent implements OnInit {
         await this._apiAuth.cambiarContraseña(newPass);
 
       } catch (error) {
-        console.error('Error al cambiar la contraseña:', error);
+        this.toastMal();
       }
     }
   }
@@ -193,6 +192,19 @@ export class PerfilComponent implements OnInit {
 
   toastSave() {
     const toastEl = document.getElementById('toastSave');
+
+    if (toastEl) {
+
+      const toast = new Toast(toastEl, {
+        autohide: true,
+        delay: 3000
+      });
+      toast.show();
+    }
+  }
+
+  toastMal() {
+    const toastEl = document.getElementById('dangerToast');
 
     if (toastEl) {
 
