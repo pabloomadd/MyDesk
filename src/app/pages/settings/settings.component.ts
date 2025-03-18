@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { AppConfig } from '../../../models/config.model';
 import { AuthService } from '../../services/auth.service';
 import { Toast } from 'bootstrap';
@@ -9,13 +8,12 @@ import { Toast } from 'bootstrap';
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './settings.component.html',
-  styleUrl: './settings.component.css'
+  styleUrl: './settings.component.css',
 })
 export class SettingsComponent implements OnInit {
-
-  settingsForm!: FormGroup
+  settingsForm!: FormGroup;
   private _apiAuth = inject(AuthService);
 
   ciudad?: string;
@@ -26,20 +24,18 @@ export class SettingsComponent implements OnInit {
 
   saving?: boolean;
 
-
   constructor(private formBuilder: FormBuilder) {
     this.settingsForm = this.formBuilder.group({
       wClock: [this.configReloj],
       wWeather: [this.configClima],
       ciudad: [this.ciudad],
-      pais: [this.pais]
-    })
+      pais: [this.pais],
+    });
   }
 
   ngOnInit(): void {
     this.getData();
     this.saving = false;
-
   }
 
   async guardarAjustes() {
@@ -71,7 +67,7 @@ export class SettingsComponent implements OnInit {
       }
 
       this.saving = false;
-      this.toastSave()
+      this.toastSave();
     }
   }
 
@@ -89,13 +85,11 @@ export class SettingsComponent implements OnInit {
         wClock: userData.wClock,
         wWeather: userData.wWeather,
         ciudad: userData.ciudad,
-        pais: userData.pais
+        pais: userData.pais,
       });
-
     } else {
       this._apiAuth.getUserDocument().subscribe(
         (userData) => {
-
           this.configReloj = userData.wClock;
           this.configClima = userData.wWeather;
           this.ciudad = userData.ciudad;
@@ -105,7 +99,7 @@ export class SettingsComponent implements OnInit {
             wClock: userData.wClock,
             wWeather: userData.wWeather,
             ciudad: userData.ciudad,
-            pais: userData.pais
+            pais: userData.pais,
           });
 
           const { userid, ...userDataWithoutId } = userData;
@@ -122,13 +116,11 @@ export class SettingsComponent implements OnInit {
     const toastEl = document.getElementById('toastSave');
 
     if (toastEl) {
-
       const toast = new Toast(toastEl, {
         autohide: true,
-        delay: 3000
+        delay: 3000,
       });
       toast.show();
     }
   }
-
 }

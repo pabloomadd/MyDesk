@@ -1,8 +1,20 @@
-import { Component, ElementRef, OnInit, OnDestroy, ViewChild, inject } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  inject,
+} from '@angular/core';
+import { Router } from '@angular/router';
 import { INote } from '../../../models/note.model';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { WeatherService } from '../../services/weather.service';
 import { IWeather } from '../../../models/weather.model';
 import { AuthService } from '../../services/auth.service';
@@ -12,12 +24,11 @@ import { UserService } from '../../services/user.service';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  styleUrl: './home.component.css',
 })
 export class HomeComponent implements OnInit, OnDestroy {
-
   @ViewChild('hrHand', { static: false }) hrHand!: ElementRef;
   @ViewChild('minHand', { static: false }) minHand!: ElementRef;
   @ViewChild('secHand', { static: false }) secHand!: ElementRef;
@@ -38,7 +49,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   nombre?: string;
   vocacion?: string;
 
-  creating: boolean = true
+  creating: boolean = true;
   noteForm!: FormGroup;
 
   notesList: INote[] = [];
@@ -63,47 +74,49 @@ export class HomeComponent implements OnInit, OnDestroy {
       id: [''],
       title: ['', Validators.required],
       descrip: ['', Validators.required],
-
-    })
-
+    });
   }
 
   //Mejorar Carga de Notas y de Clima
   ngOnInit(): void {
-    this.getData().then(() => {
+    this.getData()
+      .then(() => {
+        this.loadingWeath = true;
+        this.loadingNotes = true;
+        this.loadingClock = true;
 
-      this.loadingWeath = true;
-      this.loadingNotes = true;
-      this.loadingClock = true;
+        this.getWeather(this.configCiudad || '', this.configPais || '');
 
-      this.getWeather(this.configCiudad || '', this.configPais || '');
-
-      if (this.configReloj) {
-        this.intervalReloj = setInterval(() => {
-          const fecha = this.getTimeInTimeZone('America/Santiago');
-          this.updateTime(fecha);
-        }, 1000); // Actualización cada 1 segundo
-      }
-
-      if (this.configClima) {
-        this.intervalClima = setInterval(() => {
-          this.getWeather(this.configCiudad || 'defaultCiudad', this.configPais || 'defaultPais');
-        }, 600000); // Actualización cada 10 minutos
-      }
-
-      // Obtener las notas
-      this._apiAuth.getNotes().subscribe({
-        next: (notes) => {
-          this.notesList = notes;
-          this.loadingNotes = false;
-        },
-        error: (error) => {
-          console.error('Error al obtener las notas: ', error);
+        if (this.configReloj) {
+          this.intervalReloj = setInterval(() => {
+            const fecha = this.getTimeInTimeZone('America/Santiago');
+            this.updateTime(fecha);
+          }, 1000); // Actualización cada 1 segundo
         }
+
+        if (this.configClima) {
+          this.intervalClima = setInterval(() => {
+            this.getWeather(
+              this.configCiudad || 'defaultCiudad',
+              this.configPais || 'defaultPais'
+            );
+          }, 600000); // Actualización cada 10 minutos
+        }
+
+        // Obtener las notas
+        this._apiAuth.getNotes().subscribe({
+          next: (notes) => {
+            this.notesList = notes;
+            this.loadingNotes = false;
+          },
+          error: (error) => {
+            console.error('Error al obtener las notas: ', error);
+          },
+        });
+      })
+      .catch((error) => {
+        console.error(error);
       });
-    }).catch((error) => {
-      console.error(error);
-    });
   }
 
   ngOnDestroy(): void {
@@ -127,39 +140,39 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.cancelEditBtn();
       // Editar Nota
     } else {
-
       const noteId = this.noteForm.get('id')?.value;
       if (noteId) {
         this._apiAuth.editNote(noteId, noteData.title, noteData.descrip);
         this.cancelEditBtn();
       } else {
-        console.error("No se encontró el ID de la Nota al Editar.");
+        console.error('No se encontró el ID de la Nota al Editar.');
       }
     }
-
   }
 
   editNoteBtn(id: string) {
     this.creating = false;
-    this._apiAuth.getNote(id).then((noteData) => {
-      if (noteData) {
-        this.noteForm.patchValue({
-          title: noteData['titulo'],
-          descrip: noteData['descripcion'],
-          id: id
-        });
-      }
-    }).catch((error) => {
-      console.log("Error al Obtener Nota: ", error)
-    })
-
+    this._apiAuth
+      .getNote(id)
+      .then((noteData) => {
+        if (noteData) {
+          this.noteForm.patchValue({
+            title: noteData['titulo'],
+            descrip: noteData['descripcion'],
+            id: id,
+          });
+        }
+      })
+      .catch((error) => {
+        console.log('Error al Obtener Nota: ', error);
+      });
   }
 
   cancelEditBtn() {
     this.noteForm.patchValue({
       title: '',
-      descrip: ''
-    })
+      descrip: '',
+    });
     this.creating = true;
   }
 
@@ -169,15 +182,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   //FUNCIONES RELOJ
   updateTime(date: Date) {
-
     this.secToDeg = (date.getSeconds() / 60) * 360;
     this.minToDeg = (date.getMinutes() / 60) * 360;
     this.hrToDeg = (date.getHours() / 12) * 360;
 
     // ROTAR SECUNDERO SEGUN TIEMPO ACTUAL
-    this.secHand.nativeElement.style.transform = `rotate(${this.secToDeg}deg)`
-    this.minHand.nativeElement.style.transform = `rotate(${this.minToDeg}deg)`
-    this.hrHand.nativeElement.style.transform = `rotate(${this.hrToDeg}deg)`
+    this.secHand.nativeElement.style.transform = `rotate(${this.secToDeg}deg)`;
+    this.minHand.nativeElement.style.transform = `rotate(${this.minToDeg}deg)`;
+    this.hrHand.nativeElement.style.transform = `rotate(${this.hrToDeg}deg)`;
   }
 
   // OBTENER ZONA HORARIA
@@ -187,12 +199,16 @@ export class HomeComponent implements OnInit, OnDestroy {
       hour: 'numeric',
       minute: 'numeric',
       second: 'numeric',
-      hour12: false
+      hour12: false,
     }).formatToParts(new Date());
 
-    const hour = Number(timeString.find(part => part.type === 'hour')?.value);
-    const minute = Number(timeString.find(part => part.type === 'minute')?.value);
-    const second = Number(timeString.find(part => part.type === 'second')?.value);
+    const hour = Number(timeString.find((part) => part.type === 'hour')?.value);
+    const minute = Number(
+      timeString.find((part) => part.type === 'minute')?.value
+    );
+    const second = Number(
+      timeString.find((part) => part.type === 'second')?.value
+    );
 
     const date = new Date();
     date.setHours(hour);
@@ -202,25 +218,27 @@ export class HomeComponent implements OnInit, OnDestroy {
     return date;
   }
 
-  //FUNCIONES CLIMA 
+  //FUNCIONES CLIMA
   getWeather(ciudad: string, pais: string) {
-    this._apiWeather.getWeatherByCity(ciudad, pais).subscribe((data: IWeather) => {
-      this.weatherDetail = data
-      this.convC = Math.floor(data.main.temp - this.kelvinDiff);
-      this.loadingWeath = false;
-    });
+    this._apiWeather
+      .getWeatherByCity(ciudad, pais)
+      .subscribe((data: IWeather) => {
+        this.weatherDetail = data;
+        this.convC = Math.floor(data.main.temp - this.kelvinDiff);
+        this.loadingWeath = false;
+      });
   }
 
   logOut() {
     this._apiAuth.logOut();
     this.outToast();
     setTimeout(() => {
-      this._router.navigate(['login'])
+      this._router.navigate(['login']);
     }, 1500);
   }
 
   getUID() {
-    const UID = this._apiAuth.getCurrentUID()
+    const UID = this._apiAuth.getCurrentUID();
   }
 
   getData(): Promise<void> {
@@ -245,7 +263,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
             resolve();
           } else {
-            reject('No se pudieron obtener los datos ni del servidor ni del localStorage.');
+            reject(
+              'No se pudieron obtener los datos ni del servidor ni del localStorage.'
+            );
           }
         }
       );
@@ -258,10 +278,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (toastEl) {
       const toast = new Toast(toastEl, {
         autohide: true,
-        delay: 2000
+        delay: 2000,
       });
       toast.show();
     }
   }
 }
-

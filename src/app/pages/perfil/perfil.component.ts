@@ -1,6 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { Data } from '../../../models/userdata,model';
@@ -9,15 +14,13 @@ import { Toast } from 'bootstrap';
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './perfil.component.html',
-  styleUrl: './perfil.component.css'
+  styleUrl: './perfil.component.css',
 })
 export class PerfilComponent implements OnInit {
-
-
   private _apiAuth = inject(AuthService);
-  private _router = inject(Router)
+  private _router = inject(Router);
 
   userForm!: FormGroup;
   passForm!: FormGroup;
@@ -38,19 +41,17 @@ export class PerfilComponent implements OnInit {
   isPassVisible: boolean = false;
 
   constructor(private formBuilder: FormBuilder) {
-
     this.userForm = this.formBuilder.group({
       name: [this.nombre || '', Validators.required],
       vocacion: [this.vocacion || '', Validators.required],
       username: [this.usuario || '', Validators.required],
-      email: [this.correo || [Validators.required, Validators.email]]
+      email: [this.correo || [Validators.required, Validators.email]],
     });
 
     this.passForm = this.formBuilder.group({
       actualPass: ['', [Validators.required, Validators.minLength(6)]],
       nuevaPass: ['', [Validators.required, Validators.minLength(6)]],
-
-    })
+    });
   }
 
   ngOnInit(): void {
@@ -66,7 +67,7 @@ export class PerfilComponent implements OnInit {
         name: userData.name || '',
         vocacion: userData.vocacion || '',
         username: userData.username || '',
-        email: userData.email || ''
+        email: userData.email || '',
       });
 
       this.avatarImg = userData.avatar;
@@ -87,7 +88,7 @@ export class PerfilComponent implements OnInit {
             name: userData.name,
             vocacion: userData.vocacion,
             username: userData.username,
-            email: userData.email
+            email: userData.email,
           });
 
           const { userid, ...userDataWithoutId } = userData;
@@ -106,11 +107,9 @@ export class PerfilComponent implements OnInit {
       const newPass = this.passForm.value.nuevaPass;
 
       try {
-
         await this._apiAuth.reautenticarUsuario(passActual);
 
         await this._apiAuth.cambiarContraseña(newPass);
-
       } catch (error) {
         this.toastMal();
       }
@@ -148,11 +147,14 @@ export class PerfilComponent implements OnInit {
   }
 
   getAvs() {
-    this._apiAuth.listImages().then((urls) => {
-      this.imageUrls = urls;
-    }).catch((error) => {
-      console.error("Error al obtener las imágenes: ", error);
-    });
+    this._apiAuth
+      .listImages()
+      .then((urls) => {
+        this.imageUrls = urls;
+      })
+      .catch((error) => {
+        console.error('Error al obtener las imágenes: ', error);
+      });
   }
 
   selectAvatar(url: string) {
@@ -161,12 +163,13 @@ export class PerfilComponent implements OnInit {
 
   saveAvatar() {
     if (this.selectedAvatar) {
-      this._apiAuth.saveAvatar(this.selectedAvatar)
+      this._apiAuth
+        .saveAvatar(this.selectedAvatar)
         .then(() => {
           const existingData = localStorage.getItem('userData');
           if (existingData) {
             const userData = JSON.parse(existingData);
-            userData.avatar = this.selectedAvatar;  // O la propiedad que estés usando
+            userData.avatar = this.selectedAvatar; // O la propiedad que estés usando
             localStorage.setItem('userData', JSON.stringify(userData));
           }
 
@@ -179,7 +182,10 @@ export class PerfilComponent implements OnInit {
   }
 
   hasErrors(controlName: string, errorType: string) {
-    return this.passForm.get(controlName)?.hasError(errorType) && this.passForm.get(controlName)?.touched;
+    return (
+      this.passForm.get(controlName)?.hasError(errorType) &&
+      this.passForm.get(controlName)?.touched
+    );
   }
 
   togglePassVisible() {
@@ -194,10 +200,9 @@ export class PerfilComponent implements OnInit {
     const toastEl = document.getElementById('toastSave');
 
     if (toastEl) {
-
       const toast = new Toast(toastEl, {
         autohide: true,
-        delay: 3000
+        delay: 3000,
       });
       toast.show();
     }
@@ -207,17 +212,15 @@ export class PerfilComponent implements OnInit {
     const toastEl = document.getElementById('dangerToast');
 
     if (toastEl) {
-
       const toast = new Toast(toastEl, {
         autohide: true,
-        delay: 3000
+        delay: 3000,
       });
       toast.show();
     }
   }
 
   logOut() {
-
     this.closing = true;
     this._apiAuth.logOut();
     localStorage.clear();
@@ -225,9 +228,5 @@ export class PerfilComponent implements OnInit {
       this.closing = false;
       this._router.navigate(['login']);
     }, 1500);
-    
-
   }
-
-
 }
