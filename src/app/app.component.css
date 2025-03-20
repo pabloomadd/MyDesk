@@ -1,15 +1,16 @@
 body {
-    background: #7B93B4;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    width: 100%;
+  background-color: var(--primary-color);
+
+  padding-bottom: 130px;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
 }
 
-@media  (max-width: 767px) {
-    .mob {
-        margin-top: 15%;
-    }
+@media (max-width: 767px) {
+  .mob {
+    margin-top: 15%;
+  }
 }
