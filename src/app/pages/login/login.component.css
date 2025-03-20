@@ -1,4 +1,11 @@
 .container {
-    height: 80vh;
-    
+  height: 80vh;
+}
+
+.loginBtn {
+  margin-top: 100px;
+}
+
+a {
+  color: white;
 }

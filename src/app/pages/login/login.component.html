@@ -2,60 +2,22 @@
 
     <div class="row justify-content-center">
 
-        <div class="col-9 col-sm-11 col-md-9 col-lg-7 col-xl-5">
+        <div class="col-9 col-sm-11 col-md-9 col-lg-7 col-xl-4">
 
-            <div class="m-4">
+            <div class="m-4 mb-5">
                 <img src="https://cdn.dribbble.com/users/790846/screenshots/3576077/media/ec70d35d621c9a4b526b961cf946458f.gif"
                     alt="Logo" width="70" height="50" />
                 <h1 class="text-white">MyDesk</h1>
             </div>
 
-            <div class="card mx-auto">
-                <h2 class="p-4">Iniciar Sesión</h2>
-                <form class="m-2 mx-auto" [formGroup]="loginForm" (submit)="acceder()">
-                    <div class="m-4">
-                        <label class="form-label">Correo</label>
-                        <input [ngClass]="{'is-invalid': hasErrors('email', 'required') || hasErrors('email', 'email')}"
-                            type="text" class="form-control" formControlName="email">
-                        @if(hasErrors('email', 'required')){
-                        <div class="text-danger">Correo requerido</div>
-                        }
-                        @if (hasErrors('email', 'email')) {
-                        <div class="text-danger">Formato de Correo Inválido</div>
-                        }
-                    </div>
+            <div class="card mx-auto" style="margin-top: 100px;">
+                <h2 class="pt-3">Iniciar Sesión</h2>
 
-                    <div class="m-4">
-                        <label class="form-label">Contraseña</label>
-                        <div class="input-group">
-                            <input [ngClass]="{'is-invalid': hasErrors('pass', 'required')}" type="text"
-                                [type]="isPassVisible ? 'text' : 'password'" class="form-control"
-                                formControlName="pass">
+                <div class="loginBtn m-5">
 
-                            <button type="button" class="btn btn-outline-secondary" (click)="togglePassVisible()">
-                                <img [src]="isPassVisible ? 'assets/eye.svg' : 'assets/eye-slash.svg'" width="20px">
-                            </button>
-                        </div>
-                        @if(hasErrors('pass', 'required')){
-                        <div class="text-danger">Contraseña es requerida</div>
-                        }
-
-                    </div>
-                    <div>
-                        <button class="btn btn-primary m-1" [disabled]="!loginForm.valid" type="submit">Acceder</button>
-                    </div>
-                    <p>Aun no tienes Cuenta? <a [routerLink]="['/register']">Registrate</a></p>
-                    <br>
                     <button class="btn btn-dark m-2" type="button" (click)="demoLogin()">Acceder como Invitado</button>
-                </form>
 
-                <!-- <div class="m-4">
-                    <p>Descarga la App para Android</p>
-                    <a class="btn btn-success" href="https://drive.google.com/file/d/16JyhMrQwjrRYJ6rspIZ-i90WHJwW6taG"
-                        target="_blank">
-                        Descargar <img src="assets/download.svg">
-                    </a>
-                </div> -->
+                </div>
 
                 <div id="liveToast"
                     class="toast align-items-center text-bg-success position-fixed top-0 start-50 translate-middle-x"
@@ -82,14 +44,24 @@
                     role="alert">
                     <div class="d-flex">
                         <div class="toast-body">
-                            <strong>Inicio de Sesión Sobrecargado. Favor de volver a intentar en algunos minutos</strong>
+                            <strong>Inicio de Sesión Sobrecargado. Favor de volver a intentar en algunos
+                                minutos</strong>
                         </div>
                     </div>
                 </div>
 
-
-
             </div>
         </div>
+
+        <div class="col-12 text-center" style="color: white; margin-top: 200px;">
+
+            <div>
+                <h6>© <span>{{annio}}</span> MyDesk by <a href="https://github.com/pabloomadd"
+                        target=”_blank”>pabloomadd</a></h6>
+                <h6>Todos los Derechos Reservados.</h6>
+            </div>
+
+        </div>
+
     </div>
 </div>
